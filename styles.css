@@ -343,3 +343,11 @@ section[id],article[id]{scroll-margin-top:84px}
 .foot-nav{display:flex;flex-direction:column;gap:10px;font-size:.92rem}
 .foot-nav a{color:#cfe7ff;text-decoration:none;border-bottom:1px solid rgba(34,211,238,.35)}
 .foot-nav a:hover{color:var(--cyan)}
+
+/* These follow the base .auds rule so they win over the four-column grid. */
+@media (max-width:1080px){
+  .auds{grid-template-columns:1fr 1fr}
+}
+@media (max-width:720px){
+  .auds{grid-template-columns:1fr}
+}
