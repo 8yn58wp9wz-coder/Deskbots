@@ -117,15 +117,6 @@ button, textarea, select { font: inherit; color: inherit; }
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
-.tag { animation: rise 0.9s ease-out both; }
-.tag.t1 { animation-delay: 0.15s; }
-.tag.t2 { animation-delay: 0.35s; }
-.tag.t3 { animation-delay: 0.55s; }
-@keyframes rise {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 .hero-copy {
   position: relative; z-index: 2;
   padding: 4.5rem 0 3.5rem;
