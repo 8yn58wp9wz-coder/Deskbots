@@ -3,801 +3,191 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Desk Bots by Liftably: AI that runs your front desk</title>
-<meta name="description" content="Six Grok Bot desks for UK trades, salons, clinics and cafés. Missed calls, quotes, confirmations, invoice reminders, reviews and posts. They draft. You approve.">
-<meta name="theme-color" content="#05070f">
-<meta property="og:title" content="Desk Bots by Liftably: AI that runs your front desk">
-<meta property="og:description" content="Six Grok Bot desks for UK small businesses. They draft missed-call texts, quote follow-ups, confirmations, invoice reminders, review replies and posts. You approve every message.">
+<title>BasketWise — Compare UK supermarket shops &amp; find cheaper family meals</title>
+<meta name="description" content="Compare your whole shopping list across Asda, Tesco and Morrisons. Find cheaper dinners that respect dietary preferences, and see real savings with pack sizes, loyalty prices and delivery.">
+<meta name="theme-color" content="#0A5C5A">
+<meta property="og:title" content="BasketWise — Save on the family shop">
+<meta property="og:description" content="Whole-basket comparison for Asda, Tesco and Morrisons, plus cheaper meal ideas and real savings including loyalty and delivery.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_GB">
-<meta property="og:url" content="https://deskbots-ai.netlify.app/">
-<meta property="og:image" content="https://deskbots-ai.netlify.app/og.png">
-<meta property="og:image:width" content="1440">
-<meta property="og:image:height" content="900">
-<meta property="og:image:alt" content="Desk Bots by Liftably. AI that runs your front desk. You approve every message.">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@AraXsuper">
-<meta name="twitter:title" content="Desk Bots by Liftably: AI that runs your front desk">
-<meta name="twitter:description" content="Six Grok Bot desks for UK small businesses. They draft. You approve. Nothing goes out without your OK.">
-<meta name="twitter:image" content="https://deskbots-ai.netlify.app/og.png">
-<meta name="twitter:image:alt" content="Desk Bots by Liftably. AI that runs your front desk. You approve every message.">
-<link rel="canonical" href="https://deskbots-ai.netlify.app/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Sora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<script>document.documentElement.classList.add('js')</script>
-<a class="skip" href="#desks">Skip to the desks</a>
+<a class="skip" href="#app">Skip to app</a>
 
-<!-- shared defs + icon sprite -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f9ff"/><stop offset="1" stop-color="#aebee4"/></linearGradient>
-    <linearGradient id="gVisor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a1233"/><stop offset="1" stop-color="#1c2c6e"/></linearGradient>
-    <linearGradient id="gDesk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e2b66"/><stop offset="1" stop-color="#0b1233"/></linearGradient>
-    <linearGradient id="gHolo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee" stop-opacity=".2"/><stop offset="1" stop-color="#8b5cf6" stop-opacity=".1"/></linearGradient>
-    <linearGradient id="gStrip" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22d3ee" stop-opacity="0"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient>
-    <linearGradient id="gAv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0abfc"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
-    <radialGradient id="gHalo"><stop offset="0" stop-color="#22d3ee" stop-opacity=".55"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/></radialGradient>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-  </defs>
-  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></symbol>
-  <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
-  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
-  <symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
-  <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/></symbol>
-  <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
-  <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></symbol>
-  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
-  <symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5M9 8V2M15 8V2M18 8v5a6 6 0 0 1-12 0V8z"/></symbol>
-  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/></symbol>
-  <symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
-  <symbol id="i-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/></symbol>
-  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4z"/></symbol>
-  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></symbol>
-  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24"><path fill="currentColor" d="M18.9 2H22l-7.5 8.6L23 22h-6.8l-5.3-6.9L4.8 22H1.7l8-9.2L1 2h7l4.8 6.3zm-1.2 18h1.9L7.2 3.9h-2z"/></symbol>
-  <symbol id="i-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></symbol>
-  <symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="4"/><path d="M12 8V4M9 14h.01M15 14h.01"/><circle cx="12" cy="3" r="1"/></symbol>
-</svg>
-
-<div class="aurora" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
-
-<header class="nav">
-  <div class="wrap">
-    <a class="logo" href="#top" data-go="#top" aria-label="Desk Bots by Liftably, back to top">
-      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
-        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
-        <rect x="2" y="2" width="36" height="36" rx="12" fill="url(#lg)" opacity=".18"/>
-        <rect x="2.5" y="2.5" width="35" height="35" rx="11.5" fill="none" stroke="url(#lg)"/>
-        <rect x="9" y="12" width="22" height="17" rx="7" fill="url(#lg)"/>
-        <rect x="13" y="17" width="4" height="6" rx="2" fill="#04060d"/><rect x="23" y="17" width="4" height="6" rx="2" fill="#04060d"/>
-        <path d="M20 12V7" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="6" r="2" fill="#22d3ee"/>
-      </svg>
-      <span>Desk Bots<small>by Liftably</small></span>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top" data-go="#top" aria-label="BasketWise home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="36" height="36"><rect width="40" height="40" rx="10" fill="#0A5C5A"/><path d="M11 14h18l-1.4 12a2.5 2.5 0 0 1-2.5 2.2H14.9a2.5 2.5 0 0 1-2.5-2.2L11 14z" fill="#E8F6F4"/><path d="M14 14c0-3.2 2.4-6 6-6s6 2.8 6 6" stroke="#F2C94C" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="17" cy="22" r="1.4" fill="#0A5C5A"/><circle cx="23" cy="22" r="1.4" fill="#0A5C5A"/></svg>
+      </span>
+      <span class="brand-text">BasketWise</span>
     </a>
-    <div class="nav-end">
-    <nav class="nav-links" id="nav-links" aria-label="Sections">
-      <a href="#desks" data-go="#desks">The Desks</a>
-      <a href="#how" data-go="#how">How it works</a>
-      <a href="#who" data-go="#who">Who it's for</a>
-      <a href="#trust" data-go="#trust">Why trust it</a>
-      <a href="#faq" data-go="#faq">FAQ</a>
+    <nav class="nav" aria-label="Primary">
+      <button type="button" class="nav-link is-active" data-panel="compare">Compare basket</button>
+      <button type="button" class="nav-link" data-panel="meals">Cheaper meals</button>
+      <button type="button" class="nav-link" data-panel="savings">Real savings</button>
     </nav>
-    <a class="btn sm" href="#desks" data-go="#desks">Get a Desk</a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
-      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-      <span>Menu</span>
-    </button>
-    </div>
+    <button type="button" class="nav-menu" id="nav-menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" hidden>
+    <button type="button" data-panel="compare">Compare basket</button>
+    <button type="button" data-panel="meals">Cheaper meals</button>
+    <button type="button" data-panel="savings">Real savings</button>
   </div>
 </header>
 
 <main id="top">
-<!-- ================= HERO ================= -->
-<section class="hero" id="hero">
-  <canvas id="net" aria-hidden="true"></canvas>
-  <div class="wrap hero-grid">
-    <div class="hero-head">
-      <span class="eyebrow"><span class="dot"></span>Grok Bot templates for UK small businesses</span>
-      <h1>AI that <br class="dbr">runs your <br class="dbr"><span class="grad">front&nbsp;desk.</span></h1>
-      <div class="typed-row" aria-live="off"><span class="lbl">Handles</span><span><span id="typed">Missed calls.</span><span class="caret"></span></span></div>
+  <!-- Hero: brand + one headline + one sentence + CTA + full-bleed visual -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-wash"></div>
+      <svg class="hero-scene" viewBox="0 0 1440 720" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#9ED9D2"/>
+            <stop offset="55%" stop-color="#C8EBE6"/>
+            <stop offset="100%" stop-color="#EAF6F3"/>
+          </linearGradient>
+          <linearGradient id="counter" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F7F1E3"/>
+            <stop offset="100%" stop-color="#E8DFC8"/>
+          </linearGradient>
+        </defs>
+        <rect width="1440" height="720" fill="url(#sky)"/>
+        <ellipse class="cloud c1" cx="220" cy="120" rx="110" ry="36" fill="#fff" opacity=".55"/>
+        <ellipse class="cloud c2" cx="1180" cy="90" rx="140" ry="42" fill="#fff" opacity=".45"/>
+        <ellipse class="cloud c3" cx="780" cy="150" rx="90" ry="28" fill="#fff" opacity=".35"/>
+        <!-- counter / table -->
+        <rect y="480" width="1440" height="240" fill="url(#counter)"/>
+        <rect y="470" width="1440" height="16" fill="#D9CFAE"/>
+        <!-- produce bowls -->
+        <g transform="translate(180 390)"><g class="float-a">
+          <ellipse cx="70" cy="90" rx="78" ry="18" fill="#0A5C5A" opacity=".12"/>
+          <path d="M10 70c0-40 30-70 70-70s70 30 70 70v10H10z" fill="#E85D4C"/>
+          <circle cx="45" cy="45" r="18" fill="#C94A3C"/>
+          <circle cx="78" cy="38" r="20" fill="#F2C94C"/>
+          <circle cx="108" cy="52" r="16" fill="#68A51F"/>
+        </g></g>
+        <!-- main basket -->
+        <g transform="translate(560 300)"><g class="basket-main">
+          <ellipse cx="160" cy="210" rx="150" ry="28" fill="#0A5C5A" opacity=".15"/>
+          <path d="M40 80h240l-18 140a28 28 0 0 1-28 24H86a28 28 0 0 1-28-24L40 80z" fill="#0A5C5A"/>
+          <path d="M55 80c0-55 45-95 105-95s105 40 105 95" stroke="#F2C94C" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <rect x="70" y="100" width="70" height="55" rx="8" fill="#E8F6F4"/>
+          <rect x="150" y="95" width="55" height="65" rx="8" fill="#F2C94C"/>
+          <rect x="215" y="110" width="45" height="50" rx="8" fill="#9ED9D2"/>
+          <circle cx="100" cy="130" r="12" fill="#68A51F"/>
+          <circle cx="175" cy="125" r="14" fill="#E85D4C"/>
+        </g></g>
+      </svg>
     </div>
+    <div class="wrap hero-copy">
+      <p class="brand-hero">BasketWise</p>
+      <h1 id="hero-title">See which supermarket wins your weekly shop.</h1>
+      <p class="hero-lead">Compare Asda, Tesco and Morrisons on the same list — then swap dinners for lower-cost ingredients your family will actually eat.</p>
+      <div class="hero-cta">
+        <button type="button" class="btn primary" data-panel="compare">Compare my basket</button>
+        <button type="button" class="btn ghost" data-panel="meals">Find cheaper meals</button>
+      </div>
+    </div>
+  </section>
 
-    <div class="hero-art">
-      <div class="stage" id="stage" role="img" aria-label="Animated robot at a desk, typing, while drafted text-backs, confirmations, invoice reminders and review replies appear around it">
-        <span class="demo-tag">Illustration</span>
-        <svg viewBox="0 0 520 460" aria-hidden="true">
-          <!-- data beams -->
-          <path class="dash" d="M260 110 C 240 96 226 100 214 104" stroke="#22d3ee" stroke-opacity=".7" stroke-width="1.5" fill="none"/>
-          <path class="dash" d="M260 110 C 290 96 316 104 336 110" stroke="#a78bfa" stroke-opacity=".7" stroke-width="1.5" fill="none"/>
+  <div id="app" class="app wrap">
+    <!-- ========== Feature 1: Compare basket ========== -->
+    <section class="panel is-active" id="panel-compare" aria-labelledby="compare-title">
+      <header class="panel-head">
+        <h2 id="compare-title">Compare the whole shopping basket</h2>
+        <p>Enter your list. We’ll estimate totals for Asda, Tesco and Morrisons with price, pack size and last-updated date for each item.</p>
+      </header>
 
-          <!-- left holo: SMS thread -->
-          <g class="anim float"><g transform="translate(22 36)">
-            <rect width="192" height="124" rx="14" fill="url(#gHolo)" stroke="#22d3ee" stroke-opacity=".55"/>
-            <circle cx="15" cy="15" r="3.5" fill="#f472b6"/><circle cx="27" cy="15" r="3.5" fill="#fbbf24"/><circle cx="39" cy="15" r="3.5" fill="#34d399"/>
-            <text x="54" y="18.5" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="#7dd3fc" letter-spacing="1">TEXT-BACK</text>
-            <rect x="12" y="30" width="118" height="22" rx="9" fill="#fff" fill-opacity=".08"/>
-            <rect class="anim tl" x="20" y="38" width="96" height="6" rx="3" fill="#bae6fd" style="animation-delay:.1s"/>
-            <rect x="62" y="60" width="118" height="22" rx="9" fill="#22d3ee" fill-opacity=".2"/>
-            <rect class="anim tl" x="70" y="68" width="100" height="6" rx="3" fill="#e0f2fe" style="animation-delay:.7s"/>
-            <rect class="anim tl" x="12" y="94" width="150" height="5" rx="2.5" fill="#a78bfa" fill-opacity=".8" style="animation-delay:1.2s"/>
-            <rect class="anim tl" x="12" y="106" width="104" height="5" rx="2.5" fill="#a78bfa" fill-opacity=".55" style="animation-delay:1.5s"/>
-          </g></g>
+      <div class="compare-layout">
+        <aside class="list-panel">
+          <label class="field-label" for="list-input">Your shopping list</label>
+          <textarea id="list-input" rows="12" spellcheck="true" placeholder="One item per line&#10;e.g. Semi-skimmed milk&#10;White sliced loaf&#10;Chicken breast fillets"></textarea>
+          <div class="list-actions">
+            <button type="button" class="btn primary" id="btn-compare">Compare prices</button>
+            <button type="button" class="btn ghost" id="btn-sample">Load sample list</button>
+          </div>
+          <p class="hint" id="match-hint"></p>
+        </aside>
 
-          <!-- right holo: appointments -->
-          <g class="anim float b"><g transform="translate(336 60)">
-            <rect width="162" height="108" rx="14" fill="url(#gHolo)" stroke="#a78bfa" stroke-opacity=".6"/>
-            <text x="12" y="18" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="#c4b5fd" letter-spacing="1">CONFIRMATIONS</text>
-            <g><rect x="12" y="28" width="28" height="15" rx="4" fill="#8b5cf6" fill-opacity=".35"/><rect x="48" y="33" width="66" height="6" rx="3" fill="#fff" fill-opacity=".25"/>
-              <circle cx="140" cy="35.5" r="8.5" fill="#34d399" fill-opacity=".14" stroke="#34d399"/><path class="tick" d="M136 35.5l3 3 6-6" stroke="#6ee7b7" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:0s;animation-fill-mode:backwards"/></g>
-            <g><rect x="12" y="52" width="28" height="15" rx="4" fill="#8b5cf6" fill-opacity=".35"/><rect x="48" y="57" width="52" height="6" rx="3" fill="#fff" fill-opacity=".25"/>
-              <circle cx="140" cy="59.5" r="8.5" fill="#34d399" fill-opacity=".14" stroke="#34d399"/><path class="tick" d="M136 59.5l3 3 6-6" stroke="#6ee7b7" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:.6s;animation-fill-mode:backwards"/></g>
-            <g><rect x="12" y="76" width="28" height="15" rx="4" fill="#8b5cf6" fill-opacity=".35"/><rect x="48" y="81" width="72" height="6" rx="3" fill="#fff" fill-opacity=".25"/>
-              <circle cx="140" cy="83.5" r="8.5" fill="#34d399" fill-opacity=".14" stroke="#34d399"/><path class="tick" d="M136 83.5l3 3 6-6" stroke="#6ee7b7" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:1.2s;animation-fill-mode:backwards"/></g>
-          </g></g>
-
-          <!-- stars popping above the bot -->
-          <g fill="#fbbf24" filter="url(#glow)">
-            <g transform="translate(222 66)"><polygon class="anim star" style="animation-delay:.2s;animation-fill-mode:backwards" points="0.0,-9.0 2.4,-3.3 8.6,-2.8 3.9,1.3 5.3,7.3 0.0,4.0 -5.3,7.3 -3.9,1.3 -8.6,-2.8 -2.4,-3.3"/></g>
-            <g transform="translate(241 56)"><polygon class="anim star" style="animation-delay:.35s;animation-fill-mode:backwards" points="0.0,-9.0 2.4,-3.3 8.6,-2.8 3.9,1.3 5.3,7.3 0.0,4.0 -5.3,7.3 -3.9,1.3 -8.6,-2.8 -2.4,-3.3"/></g>
-            <g transform="translate(260 52)"><polygon class="anim star" style="animation-delay:.5s;animation-fill-mode:backwards" points="0.0,-9.0 2.4,-3.3 8.6,-2.8 3.9,1.3 5.3,7.3 0.0,4.0 -5.3,7.3 -3.9,1.3 -8.6,-2.8 -2.4,-3.3"/></g>
-            <g transform="translate(279 56)"><polygon class="anim star" style="animation-delay:.65s;animation-fill-mode:backwards" points="0.0,-9.0 2.4,-3.3 8.6,-2.8 3.9,1.3 5.3,7.3 0.0,4.0 -5.3,7.3 -3.9,1.3 -8.6,-2.8 -2.4,-3.3"/></g>
-            <g transform="translate(298 66)"><polygon class="anim star" style="animation-delay:.8s;animation-fill-mode:backwards" points="0.0,-9.0 2.4,-3.3 8.6,-2.8 3.9,1.3 5.3,7.3 0.0,4.0 -5.3,7.3 -3.9,1.3 -8.6,-2.8 -2.4,-3.3"/></g>
-          </g>
-
-          <!-- robot body -->
-          <ellipse cx="260" cy="200" rx="150" ry="120" fill="url(#gHalo)" opacity=".35"/>
-          <rect x="206" y="236" width="108" height="112" rx="32" fill="url(#gBody)"/>
-          <path d="M218 252c8-8 20-10 30-10" stroke="#fff" stroke-opacity=".8" stroke-width="3" stroke-linecap="round" fill="none"/>
-          <rect x="230" y="262" width="60" height="36" rx="12" fill="url(#gVisor)" stroke="#22d3ee" stroke-opacity=".35"/>
-          <circle class="anim chest" cx="260" cy="280" r="7" fill="#22d3ee" filter="url(#glow)"/>
-          <rect x="240" y="288" width="8" height="3" rx="1.5" fill="#a78bfa"/><rect x="272" y="288" width="8" height="3" rx="1.5" fill="#a78bfa"/>
-          <rect x="248" y="224" width="24" height="18" rx="6" fill="#8fa3cc"/>
-
-          <!-- head -->
-          <g class="anim bob">
-            <line x1="260" y1="142" x2="260" y2="116" stroke="#b4c3e6" stroke-width="3.5" stroke-linecap="round"/>
-            <circle cx="260" cy="110" r="13" fill="#22d3ee" opacity=".22"/>
-            <circle class="anim ant" cx="260" cy="110" r="6.5" fill="#67e8f9" filter="url(#glow)"/>
-            <rect x="186" y="166" width="16" height="38" rx="8" fill="#c3d0ec"/><rect x="318" y="166" width="16" height="38" rx="8" fill="#c3d0ec"/>
-            <circle cx="194" cy="185" r="3" fill="#a78bfa"/><circle cx="326" cy="185" r="3" fill="#a78bfa"/>
-            <rect x="196" y="136" width="128" height="96" rx="36" fill="url(#gBody)"/>
-            <path d="M214 160c6-12 18-18 32-19" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".9"/>
-            <rect x="210" y="154" width="100" height="60" rx="27" fill="url(#gVisor)" stroke="#22d3ee" stroke-opacity=".4"/>
-            <g class="anim look">
-              <g class="anim eyes" filter="url(#glow)">
-                <rect x="233" y="170" width="17" height="25" rx="8.5" fill="#67e8f9"/>
-                <rect x="270" y="170" width="17" height="25" rx="8.5" fill="#67e8f9"/>
-              </g>
-              <path d="M248 203q12 8 24 0" stroke="#67e8f9" stroke-width="3" stroke-linecap="round" fill="none"/>
-            </g>
-            <circle cx="224" cy="203" r="4.5" fill="#f472b6" opacity=".45"/><circle cx="296" cy="203" r="4.5" fill="#f472b6" opacity=".45"/>
-          </g>
-
-          <!-- desk -->
-          <ellipse cx="260" cy="332" rx="96" ry="7" fill="#000" opacity=".45"/>
-          <path d="M34 330H486L508 352H12Z" fill="url(#gDesk)"/>
-          <path d="M34 330H486" stroke="#22d3ee" stroke-width="2" filter="url(#glow)"/>
-          <rect x="12" y="352" width="496" height="46" fill="#070c24"/>
-          <path d="M12 352H508" stroke="#8b5cf6" stroke-opacity=".5"/>
-          <rect class="anim chest" x="170" y="370" width="180" height="3" rx="1.5" fill="url(#gStrip)"/>
-
-          <!-- mug -->
-          <g transform="translate(418 300)">
-            <path class="anim steam" d="M8 0c-4-6 4-10 0-16" stroke="#bae6fd" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path class="anim steam" d="M16 2c-4-6 4-10 0-16" stroke="#bae6fd" stroke-width="2" fill="none" stroke-linecap="round" style="animation-delay:-1.5s"/>
-            <rect x="0" y="6" width="24" height="24" rx="5" fill="#141d45" stroke="#22d3ee" stroke-opacity=".5"/>
-            <path d="M24 12h4a5 5 0 0 1 0 10h-4" stroke="#22d3ee" stroke-opacity=".5" stroke-width="2.5" fill="none"/>
-            <rect x="6" y="14" width="12" height="3" rx="1.5" fill="#22d3ee" opacity=".6"/>
-          </g>
-          <!-- little plant -->
-          <g transform="translate(78 296)">
-            <path d="M12 12c-10-4-12-14-8-20 6 4 9 12 8 20zM14 12c4-10 12-14 18-12-2 8-10 12-18 12z" fill="#34d399" opacity=".75"/>
-            <rect x="2" y="12" width="24" height="22" rx="5" fill="#141d45" stroke="#a78bfa" stroke-opacity=".5"/>
-          </g>
-
-          <!-- keyboard -->
-          <path d="M186 316H334L348 334H172Z" fill="#101a44" stroke="#22d3ee" stroke-opacity=".55"/>
-          <g fill="#67e8f9">
-            <rect class="key" x="192" y="320" width="10" height="3" rx="1.2" style="animation-delay:.1s"/><rect class="key" x="206" y="320" width="10" height="3" rx="1.2" style="animation-delay:.5s"/><rect class="key" x="220" y="320" width="10" height="3" rx="1.2" style="animation-delay:.9s"/><rect class="key" x="234" y="320" width="10" height="3" rx="1.2" style="animation-delay:.3s"/><rect class="key" x="248" y="320" width="10" height="3" rx="1.2" style="animation-delay:.7s"/><rect class="key" x="262" y="320" width="10" height="3" rx="1.2" style="animation-delay:.2s"/><rect class="key" x="276" y="320" width="10" height="3" rx="1.2" style="animation-delay:1s"/><rect class="key" x="290" y="320" width="10" height="3" rx="1.2" style="animation-delay:.6s"/><rect class="key" x="304" y="320" width="10" height="3" rx="1.2" style="animation-delay:.4s"/><rect class="key" x="318" y="320" width="10" height="3" rx="1.2" style="animation-delay:.8s"/>
-            <rect class="key" x="186" y="327" width="12" height="3" rx="1.2" style="animation-delay:.45s"/><rect class="key" x="202" y="327" width="12" height="3" rx="1.2" style="animation-delay:.15s"/><rect class="key" x="218" y="327" width="84" height="3" rx="1.2" style="animation-delay:.95s"/><rect class="key" x="306" y="327" width="12" height="3" rx="1.2" style="animation-delay:.25s"/><rect class="key" x="322" y="327" width="12" height="3" rx="1.2" style="animation-delay:.65s"/>
-          </g>
-
-          <!-- arms (typing) -->
-          <g class="anim armL" style="transform-box:view-box;transform-origin:209px 262px">
-            <path d="M209 262C184 282 188 306 222 320" stroke="#dbe5f7" stroke-width="14" stroke-linecap="round" fill="none"/>
-            <circle cx="224" cy="320" r="9.5" fill="#f4f8ff"/>
-          </g>
-          <g class="anim armR" style="transform-box:view-box;transform-origin:311px 262px">
-            <path d="M311 262C336 282 332 306 298 320" stroke="#dbe5f7" stroke-width="14" stroke-linecap="round" fill="none"/>
-            <circle cx="296" cy="320" r="9.5" fill="#f4f8ff"/>
-          </g>
-          <circle cx="209" cy="262" r="12" fill="#e6edfb"/><circle cx="311" cy="262" r="12" fill="#e6edfb"/>
-        </svg>
-
-        <div class="pops">
-        <div class="bubble b1"><span class="ic c"><svg><use href="#i-msg"/></svg></span><span><b>Text-back drafted</b><em>“Sorry we missed you! What's the job?”</em></span></div>
-        <div class="bubble b2"><span class="ic g"><svg><use href="#i-cal"/></svg></span><span><b>Tue 10:30 · Confirmed</b><em>Client replied “C”</em></span></div>
-        <div class="bubble b3"><span class="ic a"><svg><use href="#i-mail"/></svg></span><span><b>Invoice reminder drafted</b><em>7 days overdue · awaiting your OK</em></span></div>
-        <div class="bubble b4"><span class="ic p"><svg><use href="#i-star"/></svg></span><span><b><span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></b><em>Reply drafted, awaiting your OK</em></span></div>
+        <div class="results-panel">
+          <div class="store-totals" id="store-totals" role="list" aria-live="polite"></div>
+          <div class="table-wrap" id="compare-table-wrap">
+            <p class="empty-state">Add items and tap <strong>Compare prices</strong> to see store-by-store totals.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="hero-body">
-      <p class="sub">Six ready-made desks for UK trades, salons, clinics and cafés. They draft the text-backs, quote follow-ups, confirmations, invoice reminders, review replies and posts. <strong>Nothing goes out without your OK.</strong></p>
-      <div class="cta-row">
-        <a class="btn" href="#desks" data-go="#desks">See the Desks <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        <a class="btn ghost" href="#how" data-go="#how">How it works <svg aria-hidden="true"><use href="#i-down"/></svg></a>
+    <!-- ========== Feature 2: Cheaper meals ========== -->
+    <section class="panel" id="panel-meals" aria-labelledby="meals-title" hidden>
+      <header class="panel-head">
+        <h2 id="meals-title">Find cheaper meals</h2>
+        <p>We’ll suggest alternative dinners that use lower-cost ingredients, while respecting dietary preferences and family dislikes.</p>
+      </header>
+
+      <div class="meals-controls">
+        <div class="control-block">
+          <span class="field-label">Dietary preference</span>
+          <div class="chip-row" id="diet-chips" role="group" aria-label="Dietary preference"></div>
+        </div>
+        <div class="control-block">
+          <span class="field-label">Family dislikes</span>
+          <div class="chip-row" id="dislike-chips" role="group" aria-label="Family dislikes"></div>
+        </div>
+        <div class="control-block">
+          <label class="field-label" for="meal-baseline">Compare against tonight’s plan</label>
+          <select id="meal-baseline"></select>
+        </div>
+        <button type="button" class="btn primary" id="btn-meals">Suggest cheaper dinners</button>
       </div>
-      <div class="chips">
-        <span><svg aria-hidden="true"><use href="#i-shield"/></svg>You approve every message</span>
-        <span><svg aria-hidden="true"><use href="#i-tag"/></svg>One-time price</span>
-        <span><svg aria-hidden="true"><use href="#i-dl"/></svg>Instant download</span>
+
+      <div class="meal-results" id="meal-results" aria-live="polite"></div>
+    </section>
+
+    <!-- ========== Feature 3: Real savings ========== -->
+    <section class="panel" id="panel-savings" aria-labelledby="savings-title" hidden>
+      <header class="panel-head">
+        <h2 id="savings-title">Show real savings</h2>
+        <p>Same list, fuller picture: pack-size differences, loyalty-card prices where available, and delivery charges where they apply.</p>
+      </header>
+
+      <div class="savings-controls">
+        <label class="check">
+          <input type="checkbox" id="use-loyalty" checked>
+          <span>Apply loyalty prices (Clubcard, Asda Rewards, Morrisons More)</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="include-delivery" checked>
+          <span>Include delivery charges</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="normalise-packs" checked>
+          <span>Normalise pack-size differences (cost per comparable unit)</span>
+        </label>
+        <button type="button" class="btn primary" id="btn-savings">Calculate real totals</button>
       </div>
-    </div>
+
+      <div class="savings-summary" id="savings-summary" aria-live="polite"></div>
+      <div class="table-wrap" id="savings-table-wrap"></div>
+    </section>
   </div>
-</section>
-
-<section class="promise" aria-label="The promise">
-  <div class="wrap">
-    <p><strong>They draft. You approve.</strong> Nothing goes out without your OK.</p>
-  </div>
-</section>
-
-<!-- ================= TOOLS ================= -->
-<div class="tools" aria-label="Works with tools you already use">
-  <div class="wrap">
-    <span class="t-lbl">Works with tools you already use</span>
-    <div class="marquee"><div class="track">
-      <span>Grok Bot</span><span>Quo</span><span>Twilio-class SMS</span><span>Google Calendar</span><span>Google Sheets</span><span>Gmail alerts</span><span>Slack</span>
-      <span aria-hidden="true">Grok Bot</span><span aria-hidden="true">Quo</span><span aria-hidden="true">Twilio-class SMS</span><span aria-hidden="true">Google Calendar</span><span aria-hidden="true">Google Sheets</span><span aria-hidden="true">Gmail alerts</span><span aria-hidden="true">Slack</span>
-    </div></div>
-  </div>
-</div>
-<!-- ================= DESKS ================= -->
-<section class="sec" id="desks" style="padding-top:40px">
-  <div class="wrap">
-    <div class="center rv">
-      <span class="kicker">The Desks</span>
-      <h2>Six bots. Six jobs. <span class="grad">Done.</span></h2>
-      <p class="lede">Each desk is a ready-made Grok Bot template for one job. It drafts. You approve. Built for UK trades, salons, clinics and cafés.</p>
-      <nav class="jobrail" aria-label="Jump to a desk">
-        <a href="#missed-call" data-go="#missed-call">Missed Call</a>
-        <a href="#quote-chase" data-go="#quote-chase">Quote Chase</a>
-        <a href="#confirm" data-go="#confirm">Confirm</a>
-        <a href="#payment-chase" data-go="#payment-chase">Payment Chase</a>
-        <a href="#review" data-go="#review">Review</a>
-        <a href="#social" data-go="#social">Social Post</a>
-      </nav>
-    </div>
-
-    <div class="cards">
-      <!-- Missed Call Desk -->
-      <article class="card mc rv" id="missed-call" style="--d:.05s">
-        <div class="scene"><svg viewBox="0 0 320 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-  <g class="anim m-ring">
-    <rect x="28" y="40" width="48" height="84" rx="11" fill="#0d1533" stroke="#22d3ee" stroke-opacity=".75" stroke-width="1.5"/>
-    <rect x="33" y="50" width="38" height="62" rx="6" fill="#22d3ee" fill-opacity=".1"/>
-    <g transform="translate(43 62) scale(.75)" color="#67e8f9"><use href="#i-phone" width="24" height="24"/></g>
-    <text x="52" y="100" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#bae6fd">MISSED</text>
-    <rect x="46" y="116" width="12" height="2.5" rx="1.2" fill="#22d3ee" opacity=".5"/>
-  </g>
-  <g stroke="#22d3ee" stroke-width="2" fill="none" stroke-linecap="round"><path class="anim m-wave" d="M84 66q8 16 0 32"/><path class="anim m-wave w2" d="M91 58q13 24 0 48"/></g>
-  <g transform="translate(140 112)">
-  <rect x="-5" y="-6" width="10" height="9" rx="2" fill="#8fa3cc"/>
-  <rect x="-21" y="0" width="42" height="40" rx="14" fill="url(#gBody)"/>
-  <circle class="anim chest" cx="0" cy="17" r="4" fill="#22d3ee" filter="url(#glow)"/>
-  <g class="anim bob">
-    <line x1="0" y1="-45" x2="0" y2="-55" stroke="#b4c3e6" stroke-width="2.5" stroke-linecap="round"/>
-    <circle class="anim ant" cx="0" cy="-58" r="4" fill="#67e8f9" filter="url(#glow)"/>
-    <rect x="-31" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/><rect x="23" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/>
-    <rect x="-26" y="-47" width="52" height="43" rx="16" fill="url(#gBody)"/>
-    <rect x="-20" y="-40" width="40" height="28" rx="11" fill="url(#gVisor)"/>
-    <g class="anim m-look"><g class="anim eyes" filter="url(#glow)"><rect x="-11" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/><rect x="4" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/></g>
-    <path d="M-5 -19q5 3.5 10 0" stroke="#67e8f9" stroke-width="1.8" fill="none" stroke-linecap="round"/></g>
-  </g>
-  <g class="anim m-arm" style="transform-box:view-box;transform-origin:-19px 9px"><path d="M-19 9q-9 10-7 24" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="-26" cy="34" r="5" fill="#f4f8ff"/></g>
-  <g><path d="M19 9q9 10 7 24" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="26" cy="34" r="5" fill="#f4f8ff"/></g>
-</g>
-  <circle class="anim m-fly" cx="166" cy="92" r="4" fill="#67e8f9" filter="url(#glow)"/>
-  <g class="anim m-sms">
-    <rect x="186" y="34" width="122" height="56" rx="13" fill="#22d3ee" fill-opacity=".14" stroke="#22d3ee" stroke-opacity=".6"/>
-    <path d="M196 90l-6 10 16-10" fill="#22d3ee" fill-opacity=".14" stroke="#22d3ee" stroke-opacity=".6" stroke-linejoin="round"/>
-    <text x="197" y="55" font-family="Inter, sans-serif" font-size="9.5" fill="#e0f2fe">Hi! Sorry we missed</text>
-    <text x="197" y="69" font-family="Inter, sans-serif" font-size="9.5" fill="#e0f2fe">your call. What's the job?</text>
-    <text x="197" y="82" font-family="Inter, sans-serif" font-size="7" fill="#7dd3fc">TEXT-BACK · 0:04</text>
-    <circle cx="222" cy="118" r="8" fill="#34d399" fill-opacity=".15" stroke="#34d399"/>
-    <path d="M218 118l3 3 5-6" stroke="#6ee7b7" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="236" y="121.5" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#6ee7b7">Approved &amp; sent</text>
-  </g>
-</svg></div>
-        <span class="tag"><svg width="13" height="13" aria-hidden="true"><use href="#i-phone"/></svg>Home-service trades</span>
-        <h3>Missed Call Desk</h3>
-        <p class="for">Stop losing HVAC, plumbing, roofing and electrical jobs to voicemail.</p>
-        <ul class="feat">
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Instant branded text-back when a call is missed or hits voicemail</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Short one-question-at-a-time intake: job type, address, urgency, callback</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Urgency triage: emergencies alert you now, routine jobs go to the queue</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Human-approve gate, so nothing sensitive goes out without your yes</li>
-        </ul>
-        <p class="note">Bring your own Quo or Twilio-class SMS number. Not a CRM replacement.</p>
-        <div class="price-row"><span class="price">£19.95</span><span class="once">one-time</span></div>
-        <a class="btn" href="https://taedge.gumroad.com/l/nzmnfu" target="_blank" rel="noopener">Get Missed Call Desk <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      </article>
-
-      <!-- Quote Chase Desk -->
-      <article class="card qc rv" id="quote-chase" style="--d:.15s">
-        <div class="scene"><svg viewBox="0 0 320 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-  <rect x="16" y="22" width="88" height="132" rx="10" fill="#1e293b" fill-opacity=".85" stroke="#94a3b8" stroke-opacity=".7" stroke-width="1.5"/>
-  <rect x="44" y="15" width="32" height="14" rx="4" fill="#64748b" stroke="#cbd5e1" stroke-opacity=".6"/>
-  <text x="26" y="46" font-family="Space Grotesk, sans-serif" font-size="8.5" font-weight="600" fill="#e2e8f0" letter-spacing="1.5">QUOTE #214</text>
-  <text x="26" y="60" font-family="Inter, sans-serif" font-size="7.5" fill="#cbd5e1">Roof repair</text>
-  <rect x="26" y="68" width="68" height="4" rx="2" fill="#fff" fill-opacity=".18"/>
-  <rect x="26" y="77" width="52" height="4" rx="2" fill="#fff" fill-opacity=".18"/>
-  <rect x="26" y="86" width="60" height="4" rx="2" fill="#fff" fill-opacity=".18"/>
-  <text x="26" y="106" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#f1f5f9">£2,450</text>
-  <g transform="translate(26 118)">
-    <rect x="0" y="0" width="68" height="14" rx="7" fill="#34d399" fill-opacity=".15" stroke="#34d399" stroke-opacity=".7"/>
-    <text x="34" y="9.6" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#a7f3d0">TOUCH 2 OF 3</text>
-  </g>
-  <g transform="translate(26 138)"><circle cx="4" cy="4" r="3.5" fill="#34d399"/><circle cx="16" cy="4" r="3.5" fill="#34d399"/><circle cx="28" cy="4" r="3.5" fill="none" stroke="#94a3b8"/></g>
-  <path class="dash" d="M104 70 C 116 64 122 66 128 70" stroke="#94a3b8" stroke-opacity=".7" stroke-width="1.5" fill="none"/>
-  <path class="dash" d="M192 70 C 200 64 208 62 216 64" stroke="#34d399" stroke-opacity=".7" stroke-width="1.5" fill="none"/>
-  <g transform="translate(160 108)">
-  <rect x="-5" y="-6" width="10" height="9" rx="2" fill="#8fa3cc"/>
-  <rect x="-21" y="0" width="42" height="40" rx="14" fill="url(#gBody)"/>
-  <circle class="anim chest" cx="0" cy="17" r="4" fill="#34d399" filter="url(#glow)"/>
-  <g class="anim bob">
-    <line x1="0" y1="-45" x2="0" y2="-55" stroke="#b4c3e6" stroke-width="2.5" stroke-linecap="round"/>
-    <circle class="anim ant" cx="0" cy="-58" r="4" fill="#67e8f9" filter="url(#glow)"/>
-    <rect x="-31" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/><rect x="23" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/>
-    <rect x="-26" y="-47" width="52" height="43" rx="16" fill="url(#gBody)"/>
-    <rect x="-20" y="-40" width="40" height="28" rx="11" fill="url(#gVisor)"/>
-    <g class="anim look"><g class="anim eyes" filter="url(#glow)"><rect x="-11" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/><rect x="4" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/></g>
-    <path d="M-5 -19q5 3.5 10 0" stroke="#67e8f9" stroke-width="1.8" fill="none" stroke-linecap="round"/></g>
-  </g>
-  <path d="M-26 34H26L32 42H-32Z" fill="#101a44" stroke="#94a3b8" stroke-opacity=".6"/>
-  <g class="anim armL" style="transform-box:view-box;transform-origin:-19px 9px"><path d="M-19 9q-10 12-6 25" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="-12" cy="34" r="5" fill="#f4f8ff"/></g>
-  <g class="anim armR" style="transform-box:view-box;transform-origin:19px 9px"><path d="M19 9q10 12 6 25" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="12" cy="34" r="5" fill="#f4f8ff"/></g>
-</g>
-  <rect x="218" y="18" width="86" height="138" rx="15" fill="#0f172a" stroke="#34d399" stroke-opacity=".7" stroke-width="1.5"/>
-  <rect x="249" y="24" width="24" height="4" rx="2" fill="#94a3b8" fill-opacity=".5"/>
-  <text x="228" y="44" font-family="Inter, sans-serif" font-size="7" fill="#94a3b8">FOLLOW-UP · DAY 5</text>
-  <g class="anim r-pill">
-    <rect x="226" y="50" width="70" height="40" rx="9" fill="#34d399" fill-opacity=".14" stroke="#34d399" stroke-opacity=".6"/>
-    <text x="232" y="63" font-family="Inter, sans-serif" font-size="7.5" fill="#d1fae5">Hi Sam, any</text>
-    <text x="232" y="73" font-family="Inter, sans-serif" font-size="7.5" fill="#d1fae5">questions on the</text>
-    <text x="232" y="83" font-family="Inter, sans-serif" font-size="7.5" fill="#d1fae5">roof quote?</text>
-  </g>
-  <rect class="anim tl" x="236" y="98" width="60" height="22" rx="8" fill="#64748b" fill-opacity=".35" stroke="#94a3b8" stroke-opacity=".5" style="animation-delay:1.2s;animation-fill-mode:backwards"/>
-  <text x="242" y="112" font-family="Inter, sans-serif" font-size="7.5" fill="#e2e8f0">Yes, book it!</text>
-  <g transform="translate(228 130)"><rect x="0" y="0" width="68" height="15" rx="7.5" fill="#34d399" fill-opacity=".18" stroke="#34d399"/>
-  <text x="34" y="10.3" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#a7f3d0">Replied · stopped</text></g>
-</svg></div>
-        <span class="tag"><svg width="13" height="13" aria-hidden="true"><use href="#i-tag"/></svg>Builders · roofers · trades</span>
-        <h3>Quote Chase Desk</h3>
-        <p class="for">Turn quiet quotes into booked jobs. It logs every quote, drafts friendly paced follow-ups, and stops the moment they reply.</p>
-        <ul class="feat">
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Quote log with stages, so nothing goes quiet unnoticed</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Follow-up touches 1–3, plus a 30/60/90-day reopen</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Stops automatically on any reply</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>You approve every message before it goes out</li>
-        </ul>
-        <p class="note">Drafts only. Follow-ups stop the moment they reply.</p>
-        <div class="price-row"><span class="price">£19.95</span><span class="once">one-time</span></div>
-        <a class="btn" href="https://taedge.gumroad.com/l/jasno" target="_blank" rel="noopener">Get Quote Chase Desk <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      </article>
-
-      <!-- Confirm Desk -->
-      <article class="card cd rv" id="confirm" style="--d:.25s">
-        <div class="scene"><svg viewBox="0 0 320 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-  <rect x="118" y="20" width="186" height="134" rx="14" fill="#8b5cf6" fill-opacity=".1" stroke="#a78bfa" stroke-opacity=".55"/>
-  <path d="M118 46V34a14 14 0 0 1 14-14h158a14 14 0 0 1 14 14v12Z" fill="#8b5cf6" fill-opacity=".3"/>
-  <text x="132" y="37" font-family="Space Grotesk, sans-serif" font-size="9" font-weight="600" fill="#ede9fe" letter-spacing="2">TUESDAY</text>
-  <text x="290" y="37" text-anchor="end" font-family="Inter, sans-serif" font-size="7.5" fill="#c4b5fd">48h · 24h · 2h</text>
-  <rect x="128" y="58" width="166" height="24" rx="8" fill="#fff" fill-opacity=".045"/>
-    <text x="137" y="73.5" font-family="Space Grotesk, sans-serif" font-size="9.5" font-weight="600" fill="#c4b5fd">9:00</text>
-    <rect x="172" y="67" width="64" height="6" rx="3" fill="#fff" fill-opacity=".22"/>
-    <circle cx="278" cy="70" r="8" fill="#34d399" fill-opacity=".14" stroke="#34d399"/>
-    <path class="tick" d="M274 70l3 3 6-6" stroke="#6ee7b7" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:0.3s;animation-fill-mode:backwards"/>
-    <rect x="128" y="88" width="166" height="24" rx="8" fill="#fff" fill-opacity=".045"/>
-    <text x="137" y="103.5" font-family="Space Grotesk, sans-serif" font-size="9.5" font-weight="600" fill="#c4b5fd">10:30</text>
-    <rect x="172" y="97" width="50" height="6" rx="3" fill="#fff" fill-opacity=".22"/>
-    <circle cx="278" cy="100" r="8" fill="#34d399" fill-opacity=".14" stroke="#34d399"/>
-    <path class="tick" d="M274 100l3 3 6-6" stroke="#6ee7b7" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:0.9s;animation-fill-mode:backwards"/>
-    <rect x="128" y="118" width="166" height="24" rx="8" fill="#fff" fill-opacity=".045"/>
-    <text x="137" y="133.5" font-family="Space Grotesk, sans-serif" font-size="9.5" font-weight="600" fill="#c4b5fd">1:15</text>
-    <rect x="172" y="127" width="72" height="6" rx="3" fill="#fff" fill-opacity=".22"/>
-    <circle cx="278" cy="130" r="8" fill="#34d399" fill-opacity=".14" stroke="#34d399"/>
-    <path class="tick" d="M274 130l3 3 6-6" stroke="#6ee7b7" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:1.5s;animation-fill-mode:backwards"/>
-    
-  <g transform="translate(62 112)">
-  <rect x="-5" y="-6" width="10" height="9" rx="2" fill="#8fa3cc"/>
-  <rect x="-21" y="0" width="42" height="40" rx="14" fill="url(#gBody)"/>
-  <circle class="anim chest" cx="0" cy="17" r="4" fill="#22d3ee" filter="url(#glow)"/>
-  <g class="anim bob">
-    <line x1="0" y1="-45" x2="0" y2="-55" stroke="#b4c3e6" stroke-width="2.5" stroke-linecap="round"/>
-    <circle class="anim ant" cx="0" cy="-58" r="4" fill="#67e8f9" filter="url(#glow)"/>
-    <rect x="-31" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/><rect x="23" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/>
-    <rect x="-26" y="-47" width="52" height="43" rx="16" fill="url(#gBody)"/>
-    <rect x="-20" y="-40" width="40" height="28" rx="11" fill="url(#gVisor)"/>
-    <g class="anim look"><g class="anim eyes" filter="url(#glow)"><rect x="-11" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/><rect x="4" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/></g>
-    <path d="M-5 -19q5 3.5 10 0" stroke="#67e8f9" stroke-width="1.8" fill="none" stroke-linecap="round"/></g>
-  </g>
-  <g><path d="M-19 9q-9 10-7 24" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="-26" cy="34" r="5" fill="#f4f8ff"/></g>
-  <g class="anim c-arm" style="transform-box:view-box;transform-origin:19px 9px"><path d="M19 9q16-2 28-16" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="48" cy="-8" r="5" fill="#f4f8ff"/></g>
-</g>
-</svg></div>
-        <span class="tag"><svg width="13" height="13" aria-hidden="true"><use href="#i-cal"/></svg>Salons · dental · clinics</span>
-        <h3>Confirm Desk</h3>
-        <p class="for">Empty chairs cost more than a text. For salons, dentists, clinics, barbers and physio.</p>
-        <ul class="feat">
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>SMS reminders at 48h, 24h and 2h before every appointment</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Reads replies: C to confirm, R to reschedule</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Flags non-replies so no-shows don't surprise you</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Drafts waitlist fills when a slot opens, always with your approval</li>
-        </ul>
-        <p class="note">Works with Google Calendar plus your own SMS number. No deposits or payments.</p>
-        <div class="price-row"><span class="price">£19.95</span><span class="once">one-time</span></div>
-        <a class="btn" href="https://taedge.gumroad.com/l/jgwfo" target="_blank" rel="noopener">Get Confirm Desk <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      </article>
-
-      <!-- Payment Chase Desk -->
-      <article class="card pc rv" id="payment-chase" style="--d:.3s">
-        <div class="scene"><svg viewBox="0 0 320 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-  <rect x="16" y="22" width="88" height="132" rx="10" fill="#1e293b" fill-opacity=".85" stroke="#94a3b8" stroke-opacity=".7" stroke-width="1.5"/>
-  <rect x="44" y="15" width="32" height="14" rx="4" fill="#64748b" stroke="#cbd5e1" stroke-opacity=".6"/>
-  <text x="26" y="46" font-family="Space Grotesk, sans-serif" font-size="8.5" font-weight="600" fill="#e2e8f0" letter-spacing="1.5">INVOICE #207</text>
-  <text x="26" y="60" font-family="Inter, sans-serif" font-size="7.5" fill="#cbd5e1">Boiler service</text>
-  <rect x="26" y="68" width="68" height="4" rx="2" fill="#fff" fill-opacity=".18"/>
-  <rect x="26" y="77" width="52" height="4" rx="2" fill="#fff" fill-opacity=".18"/>
-  <rect x="26" y="86" width="60" height="4" rx="2" fill="#fff" fill-opacity=".18"/>
-  <text x="26" y="106" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#f1f5f9">£480.00</text>
-  <g transform="translate(26 118)">
-    <rect x="0" y="0" width="68" height="14" rx="7" fill="#fbbf24" fill-opacity=".15" stroke="#fbbf24" stroke-opacity=".7"/>
-    <text x="34" y="9.6" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#fde68a">7 DAYS OVERDUE</text>
-  </g>
-  <g transform="translate(26 138)"><circle cx="4" cy="4" r="3.5" fill="#fbbf24"/><circle cx="16" cy="4" r="3.5" fill="#fbbf24"/><circle cx="28" cy="4" r="3.5" fill="none" stroke="#94a3b8"/></g>
-  <path class="dash" d="M104 70 C 116 64 122 66 128 70" stroke="#94a3b8" stroke-opacity=".7" stroke-width="1.5" fill="none"/>
-  <path class="dash" d="M192 70 C 200 64 208 62 216 64" stroke="#fbbf24" stroke-opacity=".7" stroke-width="1.5" fill="none"/>
-  <g transform="translate(160 108)">
-  <rect x="-5" y="-6" width="10" height="9" rx="2" fill="#8fa3cc"/>
-  <rect x="-21" y="0" width="42" height="40" rx="14" fill="url(#gBody)"/>
-  <circle class="anim chest" cx="0" cy="17" r="4" fill="#fbbf24" filter="url(#glow)"/>
-  <g class="anim bob">
-    <line x1="0" y1="-45" x2="0" y2="-55" stroke="#b4c3e6" stroke-width="2.5" stroke-linecap="round"/>
-    <circle class="anim ant" cx="0" cy="-58" r="4" fill="#67e8f9" filter="url(#glow)"/>
-    <rect x="-31" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/><rect x="23" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/>
-    <rect x="-26" y="-47" width="52" height="43" rx="16" fill="url(#gBody)"/>
-    <rect x="-20" y="-40" width="40" height="28" rx="11" fill="url(#gVisor)"/>
-    <g class="anim look"><g class="anim eyes" filter="url(#glow)"><rect x="-11" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/><rect x="4" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/></g>
-    <path d="M-5 -19q5 3.5 10 0" stroke="#67e8f9" stroke-width="1.8" fill="none" stroke-linecap="round"/></g>
-  </g>
-  <path d="M-26 34H26L32 42H-32Z" fill="#101a44" stroke="#94a3b8" stroke-opacity=".6"/>
-  <g class="anim armL" style="transform-box:view-box;transform-origin:-19px 9px"><path d="M-19 9q-10 12-6 25" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="-12" cy="34" r="5" fill="#f4f8ff"/></g>
-  <g class="anim armR" style="transform-box:view-box;transform-origin:19px 9px"><path d="M19 9q10 12 6 25" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="12" cy="34" r="5" fill="#f4f8ff"/></g>
-</g>
-  <rect x="218" y="18" width="86" height="138" rx="15" fill="#0f172a" stroke="#fbbf24" stroke-opacity=".7" stroke-width="1.5"/>
-  <rect x="249" y="24" width="24" height="4" rx="2" fill="#94a3b8" fill-opacity=".5"/>
-  <text x="228" y="44" font-family="Inter, sans-serif" font-size="7" fill="#94a3b8">REMINDER · DAY 7</text>
-  <g class="anim r-pill">
-    <rect x="226" y="50" width="70" height="40" rx="9" fill="#fbbf24" fill-opacity=".14" stroke="#fbbf24" stroke-opacity=".6"/>
-    <text x="232" y="63" font-family="Inter, sans-serif" font-size="7.5" fill="#fef3c7">Hi Sarah, invoice</text>
-    <text x="232" y="73" font-family="Inter, sans-serif" font-size="7.5" fill="#fef3c7">#207 is now</text>
-    <text x="232" y="83" font-family="Inter, sans-serif" font-size="7.5" fill="#fef3c7">7 days overdue.</text>
-  </g>
-  <rect class="anim tl" x="236" y="98" width="60" height="22" rx="8" fill="#64748b" fill-opacity=".35" stroke="#94a3b8" stroke-opacity=".5" style="animation-delay:1.2s;animation-fill-mode:backwards"/>
-  <text x="242" y="112" font-family="Inter, sans-serif" font-size="7.5" fill="#e2e8f0">Paid, sorry!</text>
-  <g transform="translate(228 130)"><rect x="0" y="0" width="68" height="15" rx="7.5" fill="#34d399" fill-opacity=".18" stroke="#34d399"/>
-  <text x="34" y="10.3" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#a7f3d0">Paid · stopped</text></g>
-</svg></div>
-        <span class="tag"><svg width="13" height="13" aria-hidden="true"><use href="#i-tag"/></svg>Plumbers · sparks · builders</span>
-        <h3>Payment Chase Desk</h3>
-        <p class="for">Get paid for the jobs you&rsquo;ve already done. It tracks every unpaid invoice, drafts reminders that get firmer over time, and stops the moment they pay or reply.</p>
-        <ul class="feat">
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Invoice log with a weekly &ldquo;who owes what&rdquo; memo</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Reminders at 1, 7 and 14 days, then a final notice at 30</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Stops automatically when they pay or reply</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>You approve every message before it goes out</li>
-        </ul>
-        <p class="note">Drafts only. It chases the invoice. It never takes the payment.</p>
-        <div class="price-row"><span class="price">£14.95</span><span class="once">one-time</span></div>
-        <a class="btn" href="https://taedge.gumroad.com/l/payment-chase-desk" target="_blank" rel="noopener">Get Payment Chase Desk <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      </article>
-
-      <!-- Review Desk -->
-      <article class="card rd rv" id="review" style="--d:.35s">
-        <span class="badge" id="rd-badge">50% OFF</span>
-        <div class="scene"><svg viewBox="0 0 320 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-  <rect x="118" y="14" width="186" height="62" rx="12" fill="#fff" fill-opacity=".05" stroke="#f0abfc" stroke-opacity=".4"/>
-  <circle cx="137" cy="35" r="10" fill="url(#gAv)"/>
-  <rect x="153" y="27" width="46" height="5" rx="2.5" fill="#fff" fill-opacity=".3"/>
-  <text x="292" y="32" text-anchor="end" font-family="Inter, sans-serif" font-size="7" fill="#f5d0fe">GOOGLE REVIEW</text>
-  <g fill="#fbbf24" filter="url(#glow)"><g transform="translate(156 45)"><polygon class="anim star" style="animation-delay:0.10s;animation-fill-mode:backwards" points="0.0,-5.5 1.5,-2.0 5.2,-1.7 2.4,0.8 3.2,4.4 0.0,2.5 -3.2,4.4 -2.4,0.8 -5.2,-1.7 -1.5,-2.0"/></g><g transform="translate(168 45)"><polygon class="anim star" style="animation-delay:0.23s;animation-fill-mode:backwards" points="0.0,-5.5 1.5,-2.0 5.2,-1.7 2.4,0.8 3.2,4.4 0.0,2.5 -3.2,4.4 -2.4,0.8 -5.2,-1.7 -1.5,-2.0"/></g><g transform="translate(180 45)"><polygon class="anim star" style="animation-delay:0.36s;animation-fill-mode:backwards" points="0.0,-5.5 1.5,-2.0 5.2,-1.7 2.4,0.8 3.2,4.4 0.0,2.5 -3.2,4.4 -2.4,0.8 -5.2,-1.7 -1.5,-2.0"/></g><g transform="translate(192 45)"><polygon class="anim star" style="animation-delay:0.49s;animation-fill-mode:backwards" points="0.0,-5.5 1.5,-2.0 5.2,-1.7 2.4,0.8 3.2,4.4 0.0,2.5 -3.2,4.4 -2.4,0.8 -5.2,-1.7 -1.5,-2.0"/></g><g transform="translate(204 45)"><polygon class="anim star" style="animation-delay:0.62s;animation-fill-mode:backwards" points="0.0,-5.5 1.5,-2.0 5.2,-1.7 2.4,0.8 3.2,4.4 0.0,2.5 -3.2,4.4 -2.4,0.8 -5.2,-1.7 -1.5,-2.0"/></g></g>
-  <rect x="129" y="57" width="160" height="4" rx="2" fill="#fff" fill-opacity=".16"/><rect x="129" y="65" width="112" height="4" rx="2" fill="#fff" fill-opacity=".16"/>
-  <path class="dash" d="M146 76v14" stroke="#f0abfc" stroke-opacity=".7" stroke-width="1.5" fill="none"/>
-  <rect x="134" y="90" width="170" height="66" rx="12" fill="#f0abfc" fill-opacity=".09" stroke="#f0abfc" stroke-opacity=".55"/>
-  <text x="146" y="105" font-family="Space Grotesk, sans-serif" font-size="8.5" font-weight="600" fill="#f5d0fe" letter-spacing="1">REPLY DRAFT</text>
-  <rect class="anim tl" x="146" y="113" width="146" height="4.5" rx="2.2" fill="#fae8ff" style="animation-delay:.9s;animation-fill-mode:backwards"/>
-  <rect class="anim tl" x="146" y="122" width="128" height="4.5" rx="2.2" fill="#fae8ff" style="animation-delay:1.3s;animation-fill-mode:backwards"/>
-  <rect class="anim tl" x="146" y="131" width="84" height="4.5" rx="2.2" fill="#fae8ff" style="animation-delay:1.7s;animation-fill-mode:backwards"/>
-  <g class="anim r-pill"><rect x="240" y="136" width="54" height="14" rx="7" fill="#34d399" fill-opacity=".18" stroke="#34d399"/>
-  <text x="267" y="145.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.5" font-weight="600" fill="#a7f3d0">Approve?</text></g>
-  <g transform="translate(62 108)">
-  <rect x="-5" y="-6" width="10" height="9" rx="2" fill="#8fa3cc"/>
-  <rect x="-21" y="0" width="42" height="40" rx="14" fill="url(#gBody)"/>
-  <circle class="anim chest" cx="0" cy="17" r="4" fill="#22d3ee" filter="url(#glow)"/>
-  <g class="anim bob">
-    <line x1="0" y1="-45" x2="0" y2="-55" stroke="#b4c3e6" stroke-width="2.5" stroke-linecap="round"/>
-    <circle class="anim ant" cx="0" cy="-58" r="4" fill="#67e8f9" filter="url(#glow)"/>
-    <rect x="-31" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/><rect x="23" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/>
-    <rect x="-26" y="-47" width="52" height="43" rx="16" fill="url(#gBody)"/>
-    <rect x="-20" y="-40" width="40" height="28" rx="11" fill="url(#gVisor)"/>
-    <g class="anim look"><g class="anim eyes" filter="url(#glow)"><rect x="-11" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/><rect x="4" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/></g>
-    <path d="M-5 -19q5 3.5 10 0" stroke="#67e8f9" stroke-width="1.8" fill="none" stroke-linecap="round"/></g>
-  </g>
-  <path d="M-26 34H26L32 42H-32Z" fill="#101a44" stroke="#f0abfc" stroke-opacity=".6"/>
-  <g class="anim armL" style="transform-box:view-box;transform-origin:-19px 9px"><path d="M-19 9q-10 12-6 25" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="-12" cy="34" r="5" fill="#f4f8ff"/></g>
-  <g class="anim armR" style="transform-box:view-box;transform-origin:19px 9px"><path d="M19 9q10 12 6 25" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="12" cy="34" r="5" fill="#f4f8ff"/></g>
-</g>
-</svg></div>
-        <span class="tag"><svg width="13" height="13" aria-hidden="true"><use href="#i-star"/></svg>Local businesses</span>
-        <h3>Review Desk</h3>
-        <p class="for">On-brand Google review replies, drafted for you and approved by you.</p>
-        <ul class="feat">
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>On-brand reply drafts for Google reviews (pasted Yelp reviews too)</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>4–5★ get thank-you drafts; 1–3★ get careful escalation drafts plus a checklist</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Voice pack for your tone, sign-off and do-not-say rules</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Approve / edit / skip queue. It never auto-posts; you copy approved replies</li>
-        </ul>
-        <p class="note">Intake from Google Sheets, email alerts or paste. No API needed.</p>
-        <div class="count" id="rd-count"><span class="live"></span>Launch special ends in <b id="rd-timer">7d 00h 00m 00s</b></div>
-        <div class="price-row"><span class="price" id="rd-price">£9.95</span><span class="was" id="rd-was">£19.95</span><span class="once" id="rd-once">launch price · ends 31 Oct</span></div>
-        <a class="btn" href="https://taedge.gumroad.com/l/obtju" target="_blank" rel="noopener"><span id="rd-cta">Get Review Desk</span> <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      </article>
-
-      <!-- Social Post Desk -->
-      <article class="card sp rv" id="social" style="--d:.45s">
-        <div class="scene"><svg viewBox="0 0 320 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-  <rect x="200" y="12" width="92" height="148" rx="16" fill="#0d1533" stroke="#fcd34d" stroke-opacity=".7" stroke-width="1.5"/>
-  <rect x="232" y="18" width="28" height="4" rx="2" fill="#fcd34d" fill-opacity=".4"/>
-  <circle cx="216" cy="34" r="6" fill="url(#gAv)"/>
-  <rect x="226" y="31" width="38" height="4" rx="2" fill="#fff" fill-opacity=".3"/>
-  <g>
-    <rect class="anim tl" x="208" y="46" width="24" height="24" rx="4" fill="#fb7185" fill-opacity=".55" style="animation-delay:.2s;animation-fill-mode:backwards"/>
-    <rect class="anim tl" x="234" y="46" width="24" height="24" rx="4" fill="#fcd34d" fill-opacity=".5" style="animation-delay:.5s;animation-fill-mode:backwards"/>
-    <rect class="anim tl" x="260" y="46" width="24" height="24" rx="4" fill="#f0abfc" fill-opacity=".5" style="animation-delay:.8s;animation-fill-mode:backwards"/>
-    <rect class="anim tl" x="208" y="72" width="24" height="24" rx="4" fill="#fcd34d" fill-opacity=".4" style="animation-delay:1.1s;animation-fill-mode:backwards"/>
-    <rect class="anim tl" x="234" y="72" width="24" height="24" rx="4" fill="#fb7185" fill-opacity=".4" style="animation-delay:1.4s;animation-fill-mode:backwards"/>
-    <rect class="anim tl" x="260" y="72" width="24" height="24" rx="4" fill="#22d3ee" fill-opacity=".35" style="animation-delay:1.7s;animation-fill-mode:backwards"/>
-  </g>
-  <text x="246" y="112" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="8" font-weight="600" fill="#fde68a" letter-spacing="1.5">THIS WEEK</text>
-  <text x="210" y="126" font-family="Inter, sans-serif" font-size="7.5" fill="#fef3c7">Mon · Balayage reel</text>
-  <text x="210" y="137" font-family="Inter, sans-serif" font-size="7.5" fill="#fef3c7">Wed · Prom hair tips</text>
-  <text x="210" y="148" font-family="Inter, sans-serif" font-size="7.5" fill="#fef3c7">Fri · Slot free 2pm</text>
-  <path class="dash" d="M150 56 C 170 50 184 52 198 60" stroke="#fcd34d" stroke-opacity=".7" stroke-width="1.5" fill="none"/>
-  <g class="anim r-pill">
-    <rect x="96" y="18" width="94" height="34" rx="10" fill="#fcd34d" fill-opacity=".12" stroke="#fcd34d" stroke-opacity=".6"/>
-    <text x="104" y="32" font-family="Inter, sans-serif" font-size="8" fill="#fef3c7">Fresh colour, fresh</text>
-    <text x="104" y="44" font-family="Inter, sans-serif" font-size="7" fill="#fcd34d">#balayage #salonlife</text>
-  </g>
-  <g transform="translate(62 108)">
-  <rect x="-5" y="-6" width="10" height="9" rx="2" fill="#8fa3cc"/>
-  <rect x="-21" y="0" width="42" height="40" rx="14" fill="url(#gBody)"/>
-  <circle class="anim chest" cx="0" cy="17" r="4" fill="#22d3ee" filter="url(#glow)"/>
-  <g class="anim bob">
-    <line x1="0" y1="-45" x2="0" y2="-55" stroke="#b4c3e6" stroke-width="2.5" stroke-linecap="round"/>
-    <circle class="anim ant" cx="0" cy="-58" r="4" fill="#67e8f9" filter="url(#glow)"/>
-    <rect x="-31" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/><rect x="23" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/>
-    <rect x="-26" y="-47" width="52" height="43" rx="16" fill="url(#gBody)"/>
-    <rect x="-20" y="-40" width="40" height="28" rx="11" fill="url(#gVisor)"/>
-    <g class="anim look"><g class="anim eyes" filter="url(#glow)"><rect x="-11" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/><rect x="4" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/></g>
-    <path d="M-5 -19q5 3.5 10 0" stroke="#67e8f9" stroke-width="1.8" fill="none" stroke-linecap="round"/></g>
-  </g>
-  <path d="M-26 34H26L32 42H-32Z" fill="#101a44" stroke="#fcd34d" stroke-opacity=".6"/>
-  <g class="anim armL" style="transform-box:view-box;transform-origin:-19px 9px"><path d="M-19 9q-10 12-6 25" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="-12" cy="34" r="5" fill="#f4f8ff"/></g>
-  <g class="anim armR" style="transform-box:view-box;transform-origin:19px 9px"><path d="M19 9q10 12 6 25" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="12" cy="34" r="5" fill="#f4f8ff"/></g>
-</g>
-  <g transform="translate(112 140)"><rect x="0" y="0" width="58" height="15" rx="7.5" fill="#34d399" fill-opacity=".18" stroke="#34d399"/>
-  <text x="29" y="10.3" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.5" font-weight="600" fill="#a7f3d0">Approve?</text></g>
-</svg></div>
-        <span class="tag"><svg width="13" height="13" aria-hidden="true"><use href="#i-msg"/></svg>Salons · barbers · nail techs</span>
-        <h3>Social Post Desk</h3>
-        <p class="for">A week of salon posts, written in your voice: hooks, captions, hashtags and reel ideas. You approve every one.</p>
-        <ul class="feat">
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>3–5 post ideas a week with hooks, captions and hashtags</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Reel shot lists tied to UK dates like prom, weddings and Christmas parties</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Quick "slot free today" posts to fill last-minute gaps</li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Monthly what-worked review to sharpen next month's plan</li>
-        </ul>
-        <p class="note">Drafts only. It never posts for you and never writes fake reviews.</p>
-        <div class="price-row"><span class="price">£19.95</span><span class="once">one-time</span></div>
-        <a class="btn" href="https://taedge.gumroad.com/l/bqmzj" target="_blank" rel="noopener">Get Social Post Desk <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-<!-- ================= HOW IT WORKS ================= -->
-<section class="sec" id="how">
-  <div class="wrap">
-    <div class="center rv">
-      <span class="kicker">How it works</span>
-      <h2>Live in three steps.</h2>
-      <p class="lede">No code, no new platform. Buy a desk, bring it into Grok Bot, plug in the tools you already run.</p>
-    </div>
-    <div class="steps">
-      <div class="step rv" style="--d:.05s"><div class="num">01</div><div><h3>Buy on Gumroad</h3><p>Pick your desk and check out once. The setup guide downloads instantly, with the import link inside.</p></div></div>
-      <div class="step rv" style="--d:.15s"><div class="num">02</div><div><h3>Import into Grok Bot</h3><p>Open the link and the desk lands in Grok Bot with its skills ready. A guided getting-started asks a few quick questions, one at a time.</p></div></div>
-      <div class="step rv" style="--d:.25s"><div class="num">03</div><div><h3>Connect &amp; approve</h3><p>Hook up your SMS, Calendar, Sheets, Gmail or Slack, dry-run with a sample, then approve what goes out.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= WHO ================= -->
-<section class="sec" id="who" style="padding-top:40px">
-  <div class="wrap">
-    <div class="center rv">
-      <span class="kicker">Who it's for</span>
-      <h2>Start with the job<br>you need done.</h2>
-      <p class="lede">UK trades, salons, clinics and cafés. Each desk is written for the businesses named on its card.</p>
-    </div>
-    <div class="auds">
-      <article class="aud rv">
-        <h3>Trades</h3>
-        <p>Plumbers, sparks, roofers, builders, HVAC and electrical.</p>
-        <ul>
-          <li><a href="#missed-call" data-go="#missed-call">Missed Call Desk</a></li>
-          <li><a href="#quote-chase" data-go="#quote-chase">Quote Chase Desk</a></li>
-          <li><a href="#payment-chase" data-go="#payment-chase">Payment Chase Desk</a></li>
-        </ul>
-      </article>
-      <article class="aud rv" style="--d:.08s">
-        <h3>Salons</h3>
-        <p>Salons, barbers and nail techs.</p>
-        <ul>
-          <li><a href="#confirm" data-go="#confirm">Confirm Desk</a></li>
-          <li><a href="#social" data-go="#social">Social Post Desk</a></li>
-          <li><a href="#review" data-go="#review">Review Desk</a></li>
-        </ul>
-      </article>
-      <article class="aud rv" style="--d:.16s">
-        <h3>Clinics</h3>
-        <p>Dentists, clinics and physio.</p>
-        <ul>
-          <li><a href="#confirm" data-go="#confirm">Confirm Desk</a></li>
-          <li><a href="#review" data-go="#review">Review Desk</a></li>
-        </ul>
-      </article>
-      <article class="aud rv" style="--d:.24s">
-        <h3>Cafés</h3>
-        <p>Local cafés and other high-street businesses. Review Desk drafts Google replies and never posts them for you.</p>
-        <ul>
-          <li><a href="#review" data-go="#review">Review Desk</a></li>
-        </ul>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ================= TRUST ================= -->
-<section class="sec" id="trust" style="padding-top:40px">
-  <div class="wrap">
-    <div class="center rv">
-      <span class="kicker">Built on trust, not hype</span>
-      <h2>Smart enough to do the work.<br>Humble enough to ask first.</h2>
-      <p class="lede">No invented testimonials or inflated numbers here. Just what you actually get.</p>
-    </div>
-    <div class="trust">
-      <div class="tr rv" style="--d:.0s"><div class="ti"><svg aria-hidden="true"><use href="#i-shield"/></svg></div><h3>You approve every message</h3><p>They draft. You approve. Nothing goes out without your OK.</p></div>
-      <div class="tr rv" style="--d:.08s"><div class="ti"><svg aria-hidden="true"><use href="#i-plug"/></svg></div><h3>Works with tools you already use</h3><p>Quo or Twilio-class SMS, Google Calendar, Sheets, Gmail and Slack. No platform migration.</p></div>
-      <div class="tr rv" style="--d:.16s"><div class="ti"><svg aria-hidden="true"><use href="#i-book"/></svg></div><h3>Setup guide included</h3><p>A step-by-step guide with the import link, plus a guided getting-started inside the bot.</p></div>
-      <div class="tr rv" style="--d:.0s"><div class="ti"><svg aria-hidden="true"><use href="#i-dl"/></svg></div><h3>Instant download</h3><p>Gumroad delivers your guide the moment you check out. Start tonight.</p></div>
-      <div class="tr rv" style="--d:.08s"><div class="ti"><svg aria-hidden="true"><use href="#i-tag"/></svg></div><h3>One-time purchase</h3><p>Pay once. Not another monthly subscription.</p></div>
-      <div class="tr rv" style="--d:.16s"><div class="ti"><svg aria-hidden="true"><use href="#i-play"/></svg></div><h3>Dry-run before going live</h3><p>Test with a sample first. Nothing sends until you're ready.</p></div>
-    </div>
-    <div class="honest rv"><svg aria-hidden="true"><use href="#i-info"/></svg><div><b>Straight talk:</b> Missed Call Desk and Confirm Desk need your own SMS number (Quo or Twilio-class); we don't supply phone numbers. The desks don't take payments or deposits. Payment Chase Desk drafts reminders for unpaid invoices; it does not collect the money. They don't replace your CRM or booking suite. Review Desk never posts to Google for you, Social Post Desk never posts for you, and neither writes fake reviews.</div></div>
-  </div>
-</section>
-
-<!-- ================= FAQ ================= -->
-<section class="sec" id="faq" style="padding-top:20px">
-  <div class="wrap">
-    <div class="center rv">
-      <span class="kicker">Questions</span>
-      <h2>Before you buy.</h2>
-    </div>
-    <div class="faq rv">
-      <details>
-        <summary>What is a Desk Bot?</summary>
-        <p>A ready-made Grok Bot template for one front-desk job. You buy it once on Gumroad, import it into Grok Bot, and connect the tools you already use.</p>
-      </details>
-      <details>
-        <summary>Will it message anyone without me?</summary>
-        <p>No. They draft. You approve. Nothing goes out without your OK.</p>
-      </details>
-      <details>
-        <summary>What do I need to run one?</summary>
-        <p>Grok Bot. Missed Call Desk and Confirm Desk also need your own SMS number, Quo or Twilio-class. We don't supply phone numbers.</p>
-      </details>
-      <details>
-        <summary>Does Payment Chase Desk take the payment?</summary>
-        <p>No. It tracks unpaid invoices and drafts reminders that get firmer over time. It stops when they pay or reply. The desks don't take payments or deposits.</p>
-      </details>
-      <details>
-        <summary>Will it post reviews or social posts for me?</summary>
-        <p>No. Review Desk never auto-posts; you copy the replies you approve. Social Post Desk never posts for you. Neither writes fake reviews.</p>
-      </details>
-      <details>
-        <summary>Is there a monthly fee?</summary>
-        <p>No. Each desk is a one-time purchase. Gumroad delivers the setup guide instantly, with the import link inside.</p>
-      </details>
-    </div>
-  </div>
-</section>
-
-<!-- ================= FINAL CTA ================= -->
-<section class="sec" style="padding-top:20px;padding-bottom:0">
-  <div class="wrap">
-    <div class="final rv">
-      <svg class="final-bot" viewBox="0 0 132 112" aria-hidden="true"><ellipse cx="66" cy="104" rx="34" ry="5" fill="#22d3ee" opacity=".18"/><g transform="translate(62 62)">
-  <rect x="-5" y="-6" width="10" height="9" rx="2" fill="#8fa3cc"/>
-  <rect x="-21" y="0" width="42" height="40" rx="14" fill="url(#gBody)"/>
-  <circle class="anim chest" cx="0" cy="17" r="4" fill="#22d3ee" filter="url(#glow)"/>
-  <g class="anim bob">
-    <line x1="0" y1="-45" x2="0" y2="-55" stroke="#b4c3e6" stroke-width="2.5" stroke-linecap="round"/>
-    <circle class="anim ant" cx="0" cy="-58" r="4" fill="#67e8f9" filter="url(#glow)"/>
-    <rect x="-31" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/><rect x="23" y="-33" width="8" height="18" rx="4" fill="#c3d0ec"/>
-    <rect x="-26" y="-47" width="52" height="43" rx="16" fill="url(#gBody)"/>
-    <rect x="-20" y="-40" width="40" height="28" rx="11" fill="url(#gVisor)"/>
-    <g class="anim look"><g class="anim eyes" filter="url(#glow)"><rect x="-11" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/><rect x="4" y="-34" width="7" height="11" rx="3.5" fill="#67e8f9"/></g>
-    <path d="M-6 -19q6 5 12 0" stroke="#67e8f9" stroke-width="2" fill="none" stroke-linecap="round"/></g>
-  </g>
-  <g><path d="M-19 9q-9 10-7 24" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="-26" cy="34" r="5" fill="#f4f8ff"/></g>
-  <g class="anim wave" style="transform-box:view-box;transform-origin:19px 9px"><path d="M19 9q14-6 18-28" stroke="#dbe5f7" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="37" cy="-21" r="5.5" fill="#f4f8ff"/></g>
-</g></svg>
-      <span class="kicker">Hire your first bot</span>
-      <h2>Your front desk, upgraded.<br><span class="grad">Tonight.</span></h2>
-      <p class="lede">Pick a desk and import it in minutes. It drafts. You approve.</p>
-      <div class="cta-row">
-        <a class="btn" href="#desks" data-go="#desks">See the Desks <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        <a class="btn ghost" href="mailto:ihavethaedge@gmail.com" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-mail"/></svg> Ask a question</a>
-      </div>
-    </div>
-  </div>
-</section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="foot">
-      <div>
-        <a class="logo" href="#top" data-go="#top" style="border:0"><svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="2.5" y="2.5" width="35" height="35" rx="11.5" fill="none" stroke="url(#lg)"/><rect x="9" y="12" width="22" height="17" rx="7" fill="url(#lg)"/><rect x="13" y="17" width="4" height="6" rx="2" fill="#04060d"/><rect x="23" y="17" width="4" height="6" rx="2" fill="#04060d"/><path d="M20 12V7" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="6" r="2" fill="#22d3ee"/></svg><span>Desk Bots<small>by Liftably</small></span></a>
-        <p style="margin-top:14px;max-width:30em">Ready-made Grok Bot templates for UK trades, salons, clinics and cafés. They draft. You approve. Sold by Liftably.</p>
-      </div>
-      <nav class="foot-nav" aria-label="On this page">
-        <a href="#desks" data-go="#desks">The Desks</a>
-        <a href="#how" data-go="#how">How it works</a>
-        <a href="#who" data-go="#who">Who it's for</a>
-        <a href="#faq" data-go="#faq">FAQ</a>
-      </nav>
-      <div class="flinks">
-        <a href="mailto:ihavethaedge@gmail.com" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-mail"/></svg>ihavethaedge@gmail.com</a>
-        <a href="https://x.com/AraXsuper" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-x"/></svg>@AraXsuper</a>
-        <a href="https://taedge.gumroad.com/l/obtju" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-bag"/></svg>Shop on Gumroad</a>
-      </div>
-    </div>
-    <p class="fine">© 2026 Liftably · Desk Bots by Liftably. Grok Bot is an AI assistant app by xAI; these templates are made and sold by Liftably. Prices in GBP.</p>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p><strong>BasketWise</strong> uses illustrative UK supermarket prices for planning. Always check live prices and offers in-store or on the retailer’s site before you buy.</p>
+    <p class="fine">Sample catalogue last refreshed October 2026 · Not affiliated with Asda, Tesco or Morrisons.</p>
   </div>
 </footer>
 
-<script src="main.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

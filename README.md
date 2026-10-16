@@ -1,8 +1,14 @@
-# Desk Bots
+# BasketWise
 
-Marketing site for [Desk Bots by Liftably](https://deskbots-ai.netlify.app/): ready-made Grok Bot templates for UK trades, salons, clinics and cafés.
+A family money-saving app for the UK weekly shop. Compare the same basket across **Asda**, **Tesco** and **Morrisons**, find cheaper dinners that respect dietary preferences, and see real totals with pack sizes, loyalty prices and delivery.
 
-The desks are Missed Call Desk, Quote Chase Desk, Confirm Desk, Payment Chase Desk, Review Desk and Social Post Desk. They draft the messages. The owner approves them. Nothing goes out without that OK. Each desk is a one-time Gumroad purchase.
+## Features
+
+1. **Compare the whole shopping basket** — enter a list and see estimated store totals plus each product’s price, pack size and last-updated date.
+2. **Find cheaper meals** — alternative dinners using lower-cost ingredients, filtered by diet and family dislikes.
+3. **Show real savings** — same list with pack-size normalisation, loyalty-card prices where available, and delivery charges.
+
+Prices in the sample catalogue are illustrative for planning. Always check live prices with the retailer before buying.
 
 ## What’s in the repo
 
@@ -10,18 +16,14 @@ Plain HTML, CSS and JavaScript. No build step.
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Sales page |
+| `index.html` | App shell and UI |
 | `styles.css` | Layout and theme |
-| `main.js` | Menu, motion, and the Review Desk launch countdown |
-| `og.png` | Social share image |
+| `data.js` | Sample product, meal and store data |
+| `app.js` | Basket matching, meals and savings logic |
 | `favicon.svg` | Browser tab icon |
-| `netlify.toml` | Tells Netlify to publish the repository root |
-
-Prices and purchase links live in `index.html`. Review Desk shows a launch price of £9.95 until 31 October 2026 23:59:59 UTC, then the page shows £19.95.
+| `netlify.toml` | Publishes the repository root |
 
 ## Preview locally
-
-From this directory:
 
 ```bash
 python3 -m http.server 8080
@@ -37,11 +39,4 @@ Open `http://localhost:8080`.
 2. Leave the build command empty.
 3. Set the publish directory to `.` (the repository root).
 
-`netlify.toml` already sets that publish directory. The canonical and Open Graph URLs point at `https://deskbots-ai.netlify.app/`.
-
-### GitHub Pages
-
-1. Open Settings, then Pages.
-2. Deploy from the branch you want, folder `/ (root)`.
-
-If the site is served from a domain other than `https://deskbots-ai.netlify.app/`, update the canonical URL, `og:url`, `og:image` and `twitter:image` in `index.html` to that domain.
+`netlify.toml` already sets that publish directory.
