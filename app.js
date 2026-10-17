@@ -3,7 +3,20 @@
   if (!D) return;
 
   const ALL_STORES = ['asda', 'tesco', 'morrisons'];
+  /* Softer store dots in There-inspired dark mode */
+  const DARK_STORE_COLOURS = {
+    asda: '#b08cd9',
+    tesco: '#7eb8e8',
+    morrisons: '#cf9f7b',
+  };
   const money = (n) => '£' + (Math.round(n * 100) / 100).toFixed(2);
+  function currentTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  }
+  function storeColour(id) {
+    if (currentTheme() === 'dark' && DARK_STORE_COLOURS[id]) return DARK_STORE_COLOURS[id];
+    return (D.STORES[id] && D.STORES[id].colour) || '#888';
+  }
   const fmtDate = (iso) => {
     if (!iso) return '—';
     const d = new Date(iso + 'T12:00:00');
@@ -317,7 +330,7 @@
         '" aria-pressed="' +
         on +
         '"><span class="dot" style="background:' +
-        s.colour +
+        storeColour(id) +
         '"></span><span class="store-toggle-name">' +
         s.name +
         '</span><span class="store-toggle-state">' +
@@ -392,7 +405,7 @@
           '" role="listitem">' +
           (isBest ? '<span class="badge-best">Lowest</span>' : '') +
           '<div class="store-name"><span class="dot" style="background:' +
-          t.store.colour +
+          storeColour(t.id) +
           '"></span>' +
           t.store.name +
           '</div><div class="total">' +
@@ -424,7 +437,7 @@
             if (!o || o.price == null) {
               return (
                 '<div class="offer-row"><div class="offer-store"><span class="dot" style="background:' +
-                store.colour +
+                storeColour(id) +
                 '"></span>' +
                 store.short +
                 '</div><div class="offer-price">—</div><div class="offer-meta">No price</div></div>'
@@ -435,7 +448,7 @@
               '<div class="offer-row' +
               (best ? ' is-best' : '') +
               '"><div class="offer-store"><span class="dot" style="background:' +
-              store.colour +
+              storeColour(id) +
               '"></span>' +
               store.short +
               (best ? ' · lowest' : '') +
@@ -627,7 +640,7 @@
     lastJourneyStops = (stops || []).map((s) => ({
       id: s.id,
       name: s.store.name,
-      colour: s.store.colour,
+      colour: storeColour(s.id),
       sum: s.sum,
       pct: s.pct,
       items: (s.lines || []).map((l) => l.name),
@@ -853,7 +866,7 @@
         '</div>' +
         '<div class="journey-stop">' +
         '<div class="journey-stop-head"><span class="dot" style="background:' +
-        b.store.colour +
+        b.storeColour(id) +
         '"></span><strong>Stop 1 · ' +
         escapeHtml(b.store.name) +
         '</strong><span>100% of basket</span></div>' +
@@ -884,13 +897,13 @@
       .map(
         (s) =>
           '<div class="pct-row"><div class="pct-label"><span class="dot" style="background:' +
-          s.store.colour +
+          s.storeColour(id) +
           '"></span>' +
           escapeHtml(s.store.name) +
           '</div><div class="pct-track"><i style="width:' +
           s.pct +
           '%;background:' +
-          s.store.colour +
+          s.storeColour(id) +
           '"></i></div><div class="pct-val">' +
           s.pct +
           '%</div></div>'
@@ -904,7 +917,7 @@
           '<div class="journey-stop-head"><span class="step-num">' +
           (i + 1) +
           '</span><span class="dot" style="background:' +
-          s.store.colour +
+          s.storeColour(id) +
           '"></span><strong>' +
           escapeHtml(s.store.name) +
           '</strong><span>' +
@@ -1007,10 +1020,6 @@
   });
 
   /* ---------- Theme (light / dark) ---------- */
-  function currentTheme() {
-    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-  }
-
   function applyTheme(theme) {
     const next = theme === 'dark' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', next);
@@ -1023,7 +1032,11 @@
       btn.title = next === 'dark' ? 'Dark mode on — tap for light' : 'Light mode on — tap for dark';
     }
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', next === 'dark' ? '#0F1716' : '#0A5C5A');
+    if (meta) meta.setAttribute('content', next === 'dark' ? '#121110' : '#0A5C5A');
+    // Refresh coloured dots if store pick / results are on screen
+    if (document.getElementById('store-pick')) renderStorePick();
+    if (lastMatched.length && step === 3) renderCompare(lastMatched);
+    if (lastMatched.length && step === 4) renderJourney();
   }
 
   document.getElementById('theme-toggle').addEventListener('click', () => {

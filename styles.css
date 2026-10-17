@@ -38,37 +38,39 @@
   color-scheme: light;
 }
 
+/* There-inspired dark: charcoal, warm cards, red accent */
 [data-theme="dark"] {
-  --teal: #2f9f97;
-  --teal-deep: #248a83;
-  --teal-soft: rgba(47, 159, 151, 0.16);
-  --mint: #2a6f6a;
-  --sky: #1a3d3a;
+  --teal: #e61919;
+  --teal-deep: #c41414;
+  --teal-soft: rgba(230, 25, 25, 0.14);
+  --mint: #3a3330;
+  --sky: #2a2522;
   --lemon: #e6c35a;
-  --coral: #f07167;
-  --ink: #e8f2f0;
-  --muted: #9db5b1;
-  --line: rgba(180, 220, 214, 0.16);
-  --paper: #0f1716;
-  --surface: #172422;
-  --header-bg: rgba(15, 23, 22, 0.9);
-  --input-bg: #121c1a;
-  --soft-card: #1a2a28;
-  --save-bg: rgba(90, 150, 60, 0.25);
-  --save-ink: #b7e08a;
-  --best-bg: rgba(230, 195, 90, 0.18);
-  --pill-bg: rgba(255, 255, 255, 0.06);
-  --shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.65);
-  --bg-glow-a: rgba(47, 159, 151, 0.2);
-  --bg-glow-b: rgba(104, 165, 31, 0.1);
-  --bg-base: #0c1312;
-  --bg-mid: #101918;
-  --brand-text: #d7f3ef;
-  --track: #243634;
-  --badge-sample: rgba(230, 195, 90, 0.2);
-  --badge-live: rgba(90, 150, 60, 0.28);
-  --badge-live-ink: #b7e08a;
-  --ghost-bg: rgba(255, 255, 255, 0.06);
+  --coral: #e61919;
+  --ink: #f3f1ef;
+  --muted: #9a928c;
+  --line: rgba(255, 255, 255, 0.08);
+  --paper: #121110;
+  --surface: #262320;
+  --header-bg: rgba(18, 17, 16, 0.92);
+  --input-bg: #1a1816;
+  --soft-card: #2c2825;
+  --save-bg: rgba(230, 25, 25, 0.16);
+  --save-ink: #ff8a80;
+  --best-bg: rgba(230, 25, 25, 0.18);
+  --pill-bg: #262320;
+  --shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.75);
+  --bg-glow-a: transparent;
+  --bg-glow-b: transparent;
+  --bg-base: #121110;
+  --bg-mid: #121110;
+  --brand-text: #f3f1ef;
+  --track: #3a3330;
+  --badge-sample: #3a3330;
+  --badge-live: rgba(230, 25, 25, 0.22);
+  --badge-live-ink: #ffb4ae;
+  --ghost-bg: #2c2825;
+  --radius: 18px;
   color-scheme: dark;
 }
 
@@ -123,6 +125,31 @@ button, textarea, select { font: inherit; color: inherit; }
 .theme-toggle .theme-icon { display: none; }
 [data-theme="light"] .theme-toggle .theme-icon-moon { display: flex; }
 [data-theme="dark"] .theme-toggle .theme-icon-sun { display: flex; }
+
+[data-theme="dark"] body {
+  background: var(--paper);
+}
+[data-theme="dark"] .panel {
+  border-color: var(--line);
+  box-shadow: none;
+}
+[data-theme="dark"] .btn.primary {
+  box-shadow: none;
+}
+[data-theme="dark"] .btn.primary:hover {
+  background: #ff2a2a;
+  filter: none;
+}
+[data-theme="dark"] .store-card.is-best,
+[data-theme="dark"] .offer-row.is-best {
+  border-color: rgba(230, 25, 25, 0.45);
+}
+[data-theme="dark"] .empty-state {
+  background: var(--soft-card);
+}
+[data-theme="dark"] .brand-hero {
+  color: #e61919;
+}
 .brand {
   display: inline-flex; align-items: center; gap: 0.65rem;
   text-decoration: none; color: var(--brand-text);
