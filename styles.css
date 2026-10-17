@@ -107,12 +107,26 @@ button, textarea, select { font: inherit; color: inherit; }
   border-bottom: 1px solid var(--line);
 }
 .header-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 1rem; min-height: 4rem;
+  display: flex; align-items: center; justify-content: flex-end;
+  gap: 1rem; min-height: 3.4rem;
+}
+.minimal-header {
+  border-bottom: 0;
+  background: transparent;
+  backdrop-filter: none;
 }
 .header-tools {
   display: flex; align-items: center; gap: 0.55rem;
 }
+.brand-hero-btn {
+  appearance: none; border: 0; background: transparent; padding: 0;
+  font: inherit; color: inherit; cursor: pointer;
+}
+.step-hero {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.sr-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .theme-toggle {
   appearance: none; border: 1.5px solid var(--line); background: var(--surface);
   color: var(--brand-text); min-height: 2.75rem; padding: 0 0.75rem 0 0.65rem;
@@ -210,35 +224,10 @@ button, textarea, select { font: inherit; color: inherit; }
 .offer-meta { grid-area: meta; font-size: 0.78rem; color: var(--muted); line-height: 1.35; }
 
 /* ---------- Wizard ---------- */
-.stepper {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.4rem;
-  padding: 0.85rem 0 0.25rem;
-}
-.step-pill {
-  display: flex; align-items: center; justify-content: center; gap: 0.35rem;
-  font-family: var(--fh); font-size: 0.72rem; font-weight: 600;
-  color: var(--muted); padding: 0.45rem 0.35rem; border-radius: 999px;
-  background: var(--pill-bg); border: 1px solid var(--line);
-}
-.step-pill span {
-  width: 1.25rem; height: 1.25rem; border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: #d9e8e5; color: var(--teal-deep); font-size: 0.7rem;
-}
-.step-pill.is-active {
-  color: var(--teal-deep); background: var(--surface); border-color: var(--line);
-}
-.step-pill.is-active span,
-.step-pill.is-done span { background: var(--teal); color: #fff; }
-.step-pill.is-done { opacity: 0.85; }
-
-.step-hero { margin-bottom: 1.25rem; }
 .brand-hero {
-  margin: 0 0 0.55rem;
+  margin: 0;
   font-family: var(--fd);
-  font-size: clamp(2.6rem, 9vw, 4rem);
+  font-size: clamp(2.8rem, 10vw, 4.2rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 0.95;
@@ -696,11 +685,7 @@ table.compare tr:hover td { background: rgba(232, 246, 244, 0.45); }
   .header-inner { min-height: 3.4rem; }
   .nav { display: none; }
 
-  .stepper { gap: 0.3rem; }
-  .step-pill { font-size: 0.65rem; padding: 0.4rem 0.2rem; }
-  .step-pill span { width: 1.1rem; height: 1.1rem; font-size: 0.65rem; }
-  .brand-hero { font-size: clamp(2.35rem, 11vw, 3.2rem); }
-  .hero-lead { font-size: 0.98rem; }
+  .brand-hero { font-size: clamp(2.6rem, 12vw, 3.4rem); }
 
   .app { padding: 0.35rem 0 1.5rem; }
   .panel {

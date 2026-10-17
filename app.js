@@ -111,11 +111,6 @@
       el.hidden = !on;
       el.classList.toggle('is-active', on);
     });
-    document.querySelectorAll('[data-step-indicator]').forEach((el) => {
-      const i = Number(el.getAttribute('data-step-indicator'));
-      el.classList.toggle('is-active', i === n);
-      el.classList.toggle('is-done', i < n);
-    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -1050,7 +1045,7 @@
     const el = document.getElementById('price-mode');
     if (!el) return;
     el.textContent = liveMode ? 'Live prices (Hobnight)' : 'Sample prices';
-    el.classList.toggle('is-live', liveMode);
+    el.hidden = true; // kept for status only — UI is minimal
   }
 
   applyTheme(currentTheme());
