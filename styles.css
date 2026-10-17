@@ -267,6 +267,33 @@ button, textarea, select { font: inherit; color: inherit; }
   color: var(--teal-deep);
   margin-bottom: 0.45rem;
 }
+.easy-add {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+  margin-bottom: 0.65rem;
+}
+.btn.easy {
+  min-height: 3rem;
+  padding: 0.7rem 0.85rem;
+  background: #fff;
+  color: var(--teal-deep);
+  box-shadow: inset 0 0 0 1.5px rgba(10, 92, 90, 0.22);
+  font-size: 0.9rem;
+}
+.btn.easy svg { flex: none; }
+.btn.easy:hover { background: var(--teal-soft); }
+.btn.easy.is-listening {
+  background: var(--coral);
+  color: #fff;
+  box-shadow: none;
+  animation: listenPulse 1.2s ease-in-out infinite;
+}
+@keyframes listenPulse {
+  50% { filter: brightness(1.08); transform: scale(1.01); }
+}
+.btn.easy:disabled { opacity: 0.65; cursor: wait; }
+#easy-hint { margin: 0 0 0.75rem; }
 textarea, select {
   width: 100%;
   border: 1.5px solid var(--line);
@@ -552,9 +579,12 @@ table.compare tr:hover td { background: rgba(232, 246, 244, 0.45); }
   .check { font-size: 0.95rem; }
   .list-actions {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
   }
   .list-actions .btn { width: 100%; min-height: 3rem; }
+  .list-actions .btn.primary { grid-column: 1 / -1; }
+  .easy-add { margin-top: 0.15rem; }
 
   .store-totals {
     grid-template-columns: 1fr;

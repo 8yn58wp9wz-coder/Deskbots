@@ -4,7 +4,7 @@ A family money-saving app for the UK weekly shop. Compare the same basket across
 
 ## Features
 
-1. **Compare the whole shopping basket** — enter a list and see estimated store totals plus each product’s price, pack size and last-updated date.
+1. **Compare the whole shopping basket** — enter a list (type, **speak**, or **photo** a written list) and see estimated store totals plus each product’s price, pack size and last-updated date.
 2. **Find cheaper meals** — alternative dinners using lower-cost ingredients, filtered by diet and family dislikes.
 3. **Show real savings** — same list with pack-size normalisation, loyalty-card prices where available, and delivery charges.
 

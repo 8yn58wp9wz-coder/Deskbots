@@ -308,6 +308,204 @@
     else renderCompare(buildMatches(D.DEFAULT_LIST));
   });
 
+  document.getElementById('btn-clear-list').addEventListener('click', () => {
+    listInput.value = '';
+    matchHint.textContent = '';
+    renderCompare([]);
+  });
+
+  /* ---------- Easy input: speak + photo OCR ---------- */
+  const easyHint = document.getElementById('easy-hint');
+  const btnSpeak = document.getElementById('btn-speak');
+  const btnPhoto = document.getElementById('btn-photo');
+  const photoInput = document.getElementById('photo-input');
+  let recognition = null;
+  let listening = false;
+  let tesseractLoading = null;
+
+  function speechItemsFromTranscript(text) {
+    return String(text || '')
+      .replace(/\band\b/gi, ',')
+      .replace(/[.;]/g, ',')
+      .split(/,|\n/)
+      .map((s) => s.replace(/^[\s\-•\d.)]+/, '').trim())
+      .filter((s) => s.length > 1);
+  }
+
+  function appendListItems(items) {
+    const incoming = (items || []).map((s) => String(s).trim()).filter(Boolean);
+    if (!incoming.length) return 0;
+    const existing = parseList(listInput.value);
+    const seen = new Set(existing.map((x) => normalise(x)));
+    const added = [];
+    incoming.forEach((item) => {
+      const key = normalise(item);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      added.push(item);
+    });
+    const merged = existing.concat(added);
+    listInput.value = merged.join('\n');
+    return added.length;
+  }
+
+  function ocrLinesFromText(text) {
+    return String(text || '')
+      .split(/\n+/)
+      .map((line) =>
+        line
+          .replace(/[|]/g, 'I')
+          .replace(/^[\s\-•·*]+/, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim()
+      )
+      .filter((line) => {
+        if (line.length < 2) return false;
+        if (/^[\d£$€.,\s/]+$/.test(line)) return false;
+        if (/^(shopping list|list|tesco|asda|morrisons)$/i.test(line)) return false;
+        return /[a-zA-Z]/.test(line);
+      });
+  }
+
+  function getSpeechRecognition() {
+    const Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    return Ctor ? new Ctor() : null;
+  }
+
+  function stopListening() {
+    listening = false;
+    btnSpeak.classList.remove('is-listening');
+    btnSpeak.setAttribute('aria-pressed', 'false');
+    btnSpeak.innerHTML =
+      '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg> Speak list';
+    try {
+      if (recognition) recognition.stop();
+    } catch (_) {}
+  }
+
+  btnSpeak.addEventListener('click', () => {
+    if (listening) {
+      stopListening();
+      easyHint.textContent = 'Listening stopped. Edit the list if needed, then compare.';
+      return;
+    }
+    recognition = getSpeechRecognition();
+    if (!recognition) {
+      easyHint.textContent =
+        'Voice isn’t supported in this browser. Try Chrome or Safari on your phone, or use Photo of list.';
+      return;
+    }
+    recognition.lang = 'en-GB';
+    recognition.interimResults = true;
+    recognition.continuous = true;
+    recognition.maxAlternatives = 1;
+
+    let finalChunk = '';
+    recognition.onstart = () => {
+      listening = true;
+      btnSpeak.classList.add('is-listening');
+      btnSpeak.setAttribute('aria-pressed', 'true');
+      btnSpeak.textContent = 'Listening… tap to stop';
+      easyHint.textContent = 'Listening — say items like “milk and bread and eggs”. Tap again to stop.';
+    };
+    recognition.onerror = (ev) => {
+      stopListening();
+      const why = ev.error === 'not-allowed' ? 'Microphone permission blocked.' : 'Voice error: ' + ev.error;
+      easyHint.textContent = why + ' You can still type or use a photo.';
+    };
+    recognition.onend = () => {
+      if (!listening) return;
+      // Some browsers end after a pause — restart while user still wants listening
+      try {
+        recognition.start();
+      } catch (_) {
+        stopListening();
+      }
+    };
+    recognition.onresult = (event) => {
+      let interim = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const t = event.results[i][0].transcript;
+        if (event.results[i].isFinal) finalChunk += ' ' + t;
+        else interim += t;
+      }
+      const items = speechItemsFromTranscript(finalChunk + ' ' + interim);
+      if (items.length) {
+        easyHint.textContent = 'Heard: ' + items.slice(-6).join(', ');
+      }
+      if (finalChunk.trim()) {
+        const added = appendListItems(speechItemsFromTranscript(finalChunk));
+        finalChunk = '';
+        if (added) easyHint.textContent = 'Added ' + added + ' item' + (added === 1 ? '' : 's') + ' from speech. Keep talking or tap to stop.';
+      }
+    };
+    try {
+      recognition.start();
+    } catch (err) {
+      stopListening();
+      easyHint.textContent = 'Could not start the microphone. Check phone permissions.';
+    }
+  });
+
+  function loadTesseract() {
+    if (window.Tesseract) return Promise.resolve(window.Tesseract);
+    if (tesseractLoading) return tesseractLoading;
+    tesseractLoading = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+      s.async = true;
+      s.onload = () => resolve(window.Tesseract);
+      s.onerror = () => reject(new Error('Could not load photo reader'));
+      document.head.appendChild(s);
+    });
+    return tesseractLoading;
+  }
+
+  btnPhoto.addEventListener('click', () => photoInput.click());
+
+  photoInput.addEventListener('change', async () => {
+    const file = photoInput.files && photoInput.files[0];
+    photoInput.value = '';
+    if (!file) return;
+    btnPhoto.disabled = true;
+    btnPhoto.textContent = 'Reading photo…';
+    easyHint.textContent = 'Reading your list photo — this can take a few seconds…';
+    try {
+      const Tesseract = await loadTesseract();
+      const result = await Tesseract.recognize(file, 'eng', {
+        logger: (m) => {
+          if (m.status === 'recognizing text' && m.progress != null) {
+            easyHint.textContent = 'Reading photo… ' + Math.round(m.progress * 100) + '%';
+          }
+        },
+      });
+      const lines = ocrLinesFromText(result?.data?.text || '');
+      const added = appendListItems(lines);
+      if (!lines.length) {
+        easyHint.textContent =
+          'Couldn’t read any items. Try a clearer photo in good light, or type/speak instead.';
+      } else {
+        easyHint.textContent =
+          'Found ' +
+          lines.length +
+          ' line' +
+          (lines.length === 1 ? '' : 's') +
+          ' · added ' +
+          added +
+          ' new item' +
+          (added === 1 ? '' : 's') +
+          '. Check the list, then Compare prices.';
+        listInput.focus();
+      }
+    } catch (err) {
+      easyHint.textContent = (err && err.message) || 'Photo reading failed. Try again or type the list.';
+    } finally {
+      btnPhoto.disabled = false;
+      btnPhoto.innerHTML =
+        '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg> Photo of list';
+    }
+  });
+
   async function runCompare() {
     const lines = parseList(listInput.value);
     const btn = document.getElementById('btn-compare');

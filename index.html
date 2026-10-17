@@ -124,16 +124,29 @@
           <h2 id="compare-title">Compare the whole shopping basket</h2>
           <span class="mode-badge" id="price-mode">Sample prices</span>
         </div>
-        <p>Enter your list. We’ll estimate totals for Asda, Tesco and Morrisons with price, pack size and last-updated date for each item.</p>
+        <p>Type your list, speak it, or photograph a handwritten list. We’ll estimate totals for Asda, Tesco and Morrisons with price, pack size and last-updated date.</p>
       </header>
 
       <div class="compare-layout">
         <aside class="list-panel">
           <label class="field-label" for="list-input">Your shopping list</label>
+          <div class="easy-add" role="group" aria-label="Add items without typing">
+            <button type="button" class="btn easy" id="btn-speak" aria-pressed="false">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg>
+              Speak list
+            </button>
+            <button type="button" class="btn easy" id="btn-photo">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+              Photo of list
+            </button>
+            <input type="file" id="photo-input" accept="image/*" capture="environment" hidden>
+          </div>
+          <p class="hint" id="easy-hint">Tip: tap <strong>Speak list</strong> and say items with “and” or commas, or snap a photo of a written list.</p>
           <textarea id="list-input" rows="8" spellcheck="true" enterkeyhint="done" autocomplete="off" autocapitalize="sentences" placeholder="One item per line&#10;e.g. Semi-skimmed milk&#10;White sliced loaf&#10;Chicken breast fillets"></textarea>
           <div class="list-actions">
             <button type="button" class="btn primary" id="btn-compare">Compare prices</button>
             <button type="button" class="btn ghost" id="btn-sample">Load sample list</button>
+            <button type="button" class="btn ghost" id="btn-clear-list">Clear list</button>
           </div>
           <p class="hint" id="match-hint"></p>
         </aside>
