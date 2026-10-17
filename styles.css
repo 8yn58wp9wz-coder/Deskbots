@@ -113,7 +113,7 @@ button, textarea, select { font: inherit; color: inherit; }
 }
 .theme-toggle {
   appearance: none; border: 1.5px solid var(--line); background: var(--surface);
-  color: var(--teal-deep); width: 2.6rem; height: 2.6rem; border-radius: 12px;
+  color: var(--brand-text); width: 2.6rem; height: 2.6rem; border-radius: 12px;
   display: inline-flex; align-items: center; justify-content: center;
   cursor: pointer; flex: none;
   -webkit-tap-highlight-color: transparent;
