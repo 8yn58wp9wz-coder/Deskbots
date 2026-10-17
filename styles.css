@@ -70,21 +70,65 @@ button, textarea, select { font: inherit; color: inherit; }
 }
 .nav-link:hover { color: var(--teal); background: var(--teal-soft); }
 .nav-link.is-active { color: var(--teal-deep); background: var(--teal-soft); }
-.nav-menu {
-  display: none; appearance: none; border: 1px solid var(--line);
-  background: var(--surface); border-radius: 10px; padding: 0.5rem 0.85rem;
-  font-family: var(--fh); font-weight: 600; font-size: 0.88rem; cursor: pointer;
+/* Bottom tab bar — phone primary nav */
+.tab-bar {
+  display: none;
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 50;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  padding: 0.35rem 0.5rem calc(0.45rem + env(safe-area-inset-bottom));
+  background: rgba(251, 250, 246, 0.94);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -8px 28px -18px rgba(10, 92, 90, 0.35);
 }
-.mobile-nav {
-  display: flex; flex-direction: column; gap: 0.25rem;
-  padding: 0.5rem 1rem 1rem; border-top: 1px solid var(--line);
-  background: rgba(251, 250, 246, 0.95);
+.tab {
+  appearance: none; border: 0; background: transparent; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.15rem; min-height: 3.1rem; padding: 0.35rem 0.25rem;
+  font-family: var(--fh); font-size: 0.72rem; font-weight: 600;
+  color: var(--muted); border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
 }
-.mobile-nav button {
-  appearance: none; border: 0; background: var(--teal-soft); color: var(--teal-deep);
-  text-align: left; padding: 0.75rem 1rem; border-radius: 10px;
-  font-family: var(--fh); font-weight: 600; cursor: pointer;
+.tab-icon { display: flex; color: inherit; }
+.tab.is-active { color: var(--teal-deep); background: var(--teal-soft); }
+
+.mobile-cards { display: none; }
+.desktop-table { display: block; }
+.item-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.95rem 1rem;
+  background: #fff;
+  margin-bottom: 0.75rem;
 }
+.item-card h3 {
+  margin: 0; font-family: var(--fh); font-size: 1rem; letter-spacing: -0.01em;
+}
+.item-cat { margin: 0.2rem 0 0.7rem; font-size: 0.82rem; color: var(--muted); }
+.offer-list { display: grid; gap: 0.45rem; }
+.offer-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "store price" "meta meta";
+  gap: 0.1rem 0.75rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  background: var(--teal-soft);
+}
+.offer-row.is-best { background: #fff8dc; box-shadow: inset 0 0 0 1.5px var(--lemon); }
+.offer-store {
+  grid-area: store; font-family: var(--fh); font-size: 0.82rem; font-weight: 700;
+  display: flex; align-items: center; gap: 0.35rem;
+}
+.offer-store .dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; flex: none; }
+.offer-price {
+  grid-area: price; font-family: var(--fh); font-weight: 700; font-size: 1.05rem;
+  color: var(--teal-deep); align-self: center;
+}
+.offer-meta { grid-area: meta; font-size: 0.78rem; color: var(--muted); line-height: 1.35; }
 
 /* ---------- Hero ---------- */
 .hero {
@@ -415,15 +459,103 @@ table.compare tr:hover td { background: rgba(232, 246, 244, 0.45); }
 }
 
 @media (max-width: 860px) {
+  body {
+    font-size: 1rem;
+    padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
+  .wrap { width: min(100% - 1.25rem, var(--max)); }
+  .site-header { padding-top: env(safe-area-inset-top); }
+  .header-inner { min-height: 3.4rem; }
   .nav { display: none; }
-  .nav-menu { display: inline-flex; }
-  .compare-layout { grid-template-columns: 1fr; }
-  .store-totals { grid-template-columns: 1fr; }
-  .hero-copy { max-width: none; padding-top: 5.5rem; }
-  .brand-hero { font-size: clamp(2.4rem, 12vw, 3.4rem); }
-  .hero h1 { max-width: none; }
+  .tab-bar { display: grid; }
+
+  .hero {
+    min-height: auto;
+    max-height: none;
+  }
+  .hero-copy {
+    max-width: none;
+    padding: 3.6rem 0 1.75rem;
+  }
+  .brand-hero { font-size: clamp(2.35rem, 11vw, 3.2rem); }
+  .hero h1 {
+    max-width: none;
+    font-size: clamp(1.2rem, 4.8vw, 1.45rem);
+  }
+  .hero-lead { font-size: 0.98rem; margin-bottom: 1.2rem; }
+  .hero-cta { flex-direction: column; }
+  .hero-cta .btn { width: 100%; min-height: 3rem; }
+
+  .app { padding: 0.35rem 0 1.5rem; }
+  .panel {
+    padding: 1.1rem 1rem 1.25rem;
+    border-radius: 16px;
+  }
+  .panel-head { margin-bottom: 1.1rem; }
+  .panel-head h2 { font-size: 1.3rem; }
+  .panel-head p { font-size: 0.95rem; }
+
+  .compare-layout { grid-template-columns: 1fr; gap: 1.1rem; }
+  #list-input {
+    min-height: 9.5rem;
+    font-size: 16px; /* prevents iOS zoom on focus */
+  }
+  .chip, .btn { font-size: 0.95rem; }
+  select { min-height: 3rem; font-size: 16px; }
+  .check { font-size: 0.95rem; }
+  .list-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .list-actions .btn { width: 100%; min-height: 3rem; }
+
+  .store-totals {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+  .store-card { padding: 0.85rem 1rem; }
+  .store-card .total { font-size: 1.4rem; }
+
+  .desktop-table { display: none; }
+  .mobile-cards { display: block; }
+  .table-wrap {
+    border: 0;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .chip {
+    min-height: 2.6rem;
+    padding: 0.55rem 0.95rem;
+  }
+  .meals-controls .btn,
+  .savings-controls .btn {
+    width: 100%;
+    min-height: 3rem;
+  }
+  .meal-results { grid-template-columns: 1fr; }
+  .check {
+    padding: 0.55rem 0;
+    font-size: 0.95rem;
+  }
+  .check input {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.15rem;
+  }
+  .savings-summary { grid-template-columns: 1fr; }
+  .site-footer { padding: 1.5rem 0 1rem; font-size: 0.88rem; }
 }
 
 @media (min-width: 861px) {
-  .mobile-nav { display: none !important; }
+  .tab-bar { display: none !important; }
+  .mobile-cards { display: none !important; }
+  .desktop-table { display: block; }
+}
+
+/* Narrow phones */
+@media (max-width: 380px) {
+  .brand-text { font-size: 1.05rem; }
+  .brand-hero { font-size: 2.1rem; }
+  .tab { font-size: 0.68rem; }
 }

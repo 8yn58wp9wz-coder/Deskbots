@@ -22,8 +22,6 @@
     savings: document.getElementById('panel-savings'),
   };
   const navLinks = document.querySelectorAll('[data-panel]');
-  const mobileNav = document.getElementById('mobile-nav');
-  const navMenu = document.getElementById('nav-menu');
 
   function showPanel(id) {
     Object.keys(panels).forEach((key) => {
@@ -32,11 +30,9 @@
       el.hidden = !on;
       el.classList.toggle('is-active', on);
     });
-    document.querySelectorAll('.nav-link').forEach((btn) => {
+    document.querySelectorAll('.nav-link, .tab').forEach((btn) => {
       btn.classList.toggle('is-active', btn.getAttribute('data-panel') === id);
     });
-    if (mobileNav) mobileNav.hidden = true;
-    if (navMenu) navMenu.setAttribute('aria-expanded', 'false');
     if (id !== 'top') {
       document.getElementById('app').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -45,14 +41,6 @@
   navLinks.forEach((el) => {
     el.addEventListener('click', () => showPanel(el.getAttribute('data-panel')));
   });
-
-  if (navMenu && mobileNav) {
-    navMenu.addEventListener('click', () => {
-      const open = mobileNav.hidden;
-      mobileNav.hidden = !open;
-      navMenu.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-  }
 
   document.querySelectorAll('[data-go]').forEach((a) => {
     a.addEventListener('click', (e) => {
@@ -223,10 +211,58 @@
       })
       .join('');
 
+    const cards = matches
+      .map((m) => {
+        if (!m.product) {
+          return (
+            '<article class="item-card"><h3>' +
+            escapeHtml(m.line) +
+            '</h3><p class="unmatched">No match in sample catalogue</p></article>'
+          );
+        }
+        const prices = STORE_IDS.map((id) => m.product.offers[id].price);
+        const low = Math.min(...prices);
+        const offers = STORE_IDS.map((id) => {
+          const o = m.product.offers[id];
+          const store = D.STORES[id];
+          const best = o.price === low;
+          return (
+            '<div class="offer-row' +
+            (best ? ' is-best' : '') +
+            '"><div class="offer-store"><span class="dot" style="background:' +
+            store.colour +
+            '"></span>' +
+            store.short +
+            (best ? ' · lowest' : '') +
+            '</div><div class="offer-price">' +
+            money(o.price) +
+            '</div><div class="offer-meta">' +
+            escapeHtml(o.pack) +
+            ' · ' +
+            escapeHtml(o.unit) +
+            '<br>Updated ' +
+            fmtDate(o.updated) +
+            '</div></div>'
+          );
+        }).join('');
+        return (
+          '<article class="item-card"><h3>' +
+          escapeHtml(m.product.name) +
+          '</h3><p class="item-cat">' +
+          escapeHtml(m.product.category) +
+          '</p><div class="offer-list">' +
+          offers +
+          '</div></article>'
+        );
+      })
+      .join('');
+
     compareWrap.innerHTML =
-      '<table class="compare"><thead><tr><th>Product</th><th>Asda</th><th>Tesco</th><th>Morrisons</th></tr></thead><tbody>' +
+      '<div class="mobile-cards">' +
+      cards +
+      '</div><div class="desktop-table"><table class="compare"><thead><tr><th>Product</th><th>Asda</th><th>Tesco</th><th>Morrisons</th></tr></thead><tbody>' +
       rows +
-      '</tbody></table>';
+      '</tbody></table></div>';
   }
 
   function escapeHtml(s) {
@@ -634,10 +670,75 @@
         .join('') +
       '</tr>';
 
+    const cards = matched
+      .map((m) => {
+        const offers = STORE_IDS.map((sid) => {
+          const r = results.find((x) => x.id === sid);
+          const line = r.detail.find((d) => d.name === m.product.name);
+          const store = D.STORES[sid];
+          const win = r.id === best.id;
+          const loyaltyBit =
+            useLoyalty && line.loyalty != null
+              ? '<br><span class="loyalty-note">Loyalty ' + money(line.loyalty) + '</span>'
+              : '';
+          return (
+            '<div class="offer-row' +
+            (win ? ' is-best' : '') +
+            '"><div class="offer-store"><span class="dot" style="background:' +
+            store.colour +
+            '"></span>' +
+            store.short +
+            '</div><div class="offer-price">' +
+            money(line.display) +
+            '</div><div class="offer-meta">' +
+            escapeHtml(line.note) +
+            loyaltyBit +
+            '</div></div>'
+          );
+        }).join('');
+        return (
+          '<article class="item-card"><h3>' +
+          escapeHtml(m.product.name) +
+          '</h3><div class="offer-list">' +
+          offers +
+          '</div></article>'
+        );
+      })
+      .join('');
+
+    const totalsCard =
+      '<article class="item-card totals-card"><h3>Real totals</h3><div class="offer-list">' +
+      results
+        .map((r) => {
+          const win = r.id === best.id;
+          return (
+            '<div class="offer-row' +
+            (win ? ' is-best' : '') +
+            '"><div class="offer-store"><span class="dot" style="background:' +
+            r.store.colour +
+            '"></span>' +
+            r.store.short +
+            (win ? ' · best' : '') +
+            '</div><div class="offer-price">' +
+            money(r.total) +
+            '</div><div class="offer-meta">Goods ' +
+            money(r.goods) +
+            (includeDelivery
+              ? ' · Delivery ' + (r.delivery === 0 ? 'free' : money(r.delivery))
+              : '') +
+            '</div></div>'
+          );
+        })
+        .join('') +
+      '</div></article>';
+
     wrap.innerHTML =
-      '<table class="compare"><thead><tr><th>Item</th><th>Asda</th><th>Tesco</th><th>Morrisons</th></tr></thead><tbody>' +
+      '<div class="mobile-cards">' +
+      totalsCard +
+      cards +
+      '</div><div class="desktop-table"><table class="compare"><thead><tr><th>Item</th><th>Asda</th><th>Tesco</th><th>Morrisons</th></tr></thead><tbody>' +
       body +
-      '</tbody></table>';
+      '</tbody></table></div>';
   }
 
   document.getElementById('btn-savings').addEventListener('click', renderSavings);

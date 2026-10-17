@@ -6,6 +6,10 @@
 <title>BasketWise — Compare UK supermarket shops &amp; find cheaper family meals</title>
 <meta name="description" content="Compare your whole shopping list across Asda, Tesco and Morrisons. Find cheaper dinners that respect dietary preferences, and see real savings with pack sizes, loyalty prices and delivery.">
 <meta name="theme-color" content="#0A5C5A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
 <meta property="og:title" content="BasketWise — Save on the family shop">
 <meta property="og:description" content="Whole-basket comparison for Asda, Tesco and Morrisons, plus cheaper meal ideas and real savings including loyalty and delivery.">
 <meta property="og:type" content="website">
@@ -32,14 +36,29 @@
       <button type="button" class="nav-link" data-panel="meals">Cheaper meals</button>
       <button type="button" class="nav-link" data-panel="savings">Real savings</button>
     </nav>
-    <button type="button" class="nav-menu" id="nav-menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
-  </div>
-  <div class="mobile-nav" id="mobile-nav" hidden>
-    <button type="button" data-panel="compare">Compare basket</button>
-    <button type="button" data-panel="meals">Cheaper meals</button>
-    <button type="button" data-panel="savings">Real savings</button>
   </div>
 </header>
+
+<nav class="tab-bar" id="tab-bar" aria-label="App sections">
+  <button type="button" class="tab is-active" data-panel="compare">
+    <span class="tab-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
+    </span>
+    <span>Compare</span>
+  </button>
+  <button type="button" class="tab" data-panel="meals">
+    <span class="tab-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 11h16v2a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6v-2z"/><path d="M8 11V5M12 11V3M16 11V7"/></svg>
+    </span>
+    <span>Meals</span>
+  </button>
+  <button type="button" class="tab" data-panel="savings">
+    <span class="tab-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M8 8h5.5a2.5 2.5 0 0 1 0 5H9m3.5 0H14a2.5 2.5 0 0 1 0 5H8"/></svg>
+    </span>
+    <span>Savings</span>
+  </button>
+</nav>
 
 <main id="top">
   <!-- Hero: brand + one headline + one sentence + CTA + full-bleed visual -->
@@ -108,7 +127,7 @@
       <div class="compare-layout">
         <aside class="list-panel">
           <label class="field-label" for="list-input">Your shopping list</label>
-          <textarea id="list-input" rows="12" spellcheck="true" placeholder="One item per line&#10;e.g. Semi-skimmed milk&#10;White sliced loaf&#10;Chicken breast fillets"></textarea>
+          <textarea id="list-input" rows="8" spellcheck="true" enterkeyhint="done" autocomplete="off" autocapitalize="sentences" placeholder="One item per line&#10;e.g. Semi-skimmed milk&#10;White sliced loaf&#10;Chicken breast fillets"></textarea>
           <div class="list-actions">
             <button type="button" class="btn primary" id="btn-compare">Compare prices</button>
             <button type="button" class="btn ghost" id="btn-sample">Load sample list</button>
