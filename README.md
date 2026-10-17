@@ -1,12 +1,13 @@
 # BasketWise
 
-A family money-saving app for the UK weekly shop. Compare the same basket across **Asda**, **Tesco** and **Morrisons**, find cheaper dinners that respect dietary preferences, and see real totals with pack sizes, loyalty prices and delivery.
+A family money-saving app for the UK weekly shop. Enter a list, pick stores, compare **Asda**, **Tesco** and **Morrisons**, then get a shopping journey — one cheapest shop or a split across stores.
 
-## Features
+## Flow
 
-1. **Compare the whole shopping basket** — enter a list (type, **speak**, or **photo** a written list) and see estimated store totals plus each product’s price, pack size and last-updated date.
-2. **Find cheaper meals** — alternative dinners using lower-cost ingredients, filtered by diet and family dislikes.
-3. **Show real savings** — same list with pack-size normalisation, loyalty-card prices where available, and delivery charges.
+1. **List** — type, **speak**, or **photo** a written list  
+2. **Stores** — choose which shops to include and whether you want one stop or a split trip  
+3. **Prices** — compare the basket item by item  
+4. **Journey** — e.g. shop everything at the cheapest total, or a split like 60% Morrisons → 30% Asda → 10% Tesco
 
 Prices in the sample catalogue are illustrative for planning. Always check live prices with the retailer before buying.
 

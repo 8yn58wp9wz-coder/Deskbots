@@ -3,17 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>BasketWise — Compare UK supermarket shops &amp; find cheaper family meals</title>
-<meta name="description" content="Compare your whole shopping list across Asda, Tesco and Morrisons. Find cheaper dinners that respect dietary preferences, and see real savings with pack sizes, loyalty prices and delivery.">
+<title>BasketWise — Compare UK supermarket shops &amp; plan your shop</title>
+<meta name="description" content="Enter your shopping list, pick stores, compare Asda, Tesco and Morrisons, then get a simple shopping journey — one cheapest shop or a split across stores.">
 <meta name="theme-color" content="#0A5C5A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="format-detection" content="telephone=no">
-<meta property="og:title" content="BasketWise — Save on the family shop">
-<meta property="og:description" content="Whole-basket comparison for Asda, Tesco and Morrisons, plus cheaper meal ideas and real savings including loyalty and delivery.">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="en_GB">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,200 +21,140 @@
 
 <header class="site-header">
   <div class="wrap header-inner">
-    <a class="brand" href="#top" data-go="#top" aria-label="BasketWise home">
+    <a class="brand" href="#top" id="brand-home" aria-label="BasketWise home">
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 40 40" width="36" height="36"><rect width="40" height="40" rx="10" fill="#0A5C5A"/><path d="M11 14h18l-1.4 12a2.5 2.5 0 0 1-2.5 2.2H14.9a2.5 2.5 0 0 1-2.5-2.2L11 14z" fill="#E8F6F4"/><path d="M14 14c0-3.2 2.4-6 6-6s6 2.8 6 6" stroke="#F2C94C" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="17" cy="22" r="1.4" fill="#0A5C5A"/><circle cx="23" cy="22" r="1.4" fill="#0A5C5A"/></svg>
       </span>
       <span class="brand-text">BasketWise</span>
     </a>
-    <nav class="nav" aria-label="Primary">
-      <button type="button" class="nav-link is-active" data-panel="compare">Compare basket</button>
-      <button type="button" class="nav-link" data-panel="meals">Cheaper meals</button>
-      <button type="button" class="nav-link" data-panel="savings">Real savings</button>
-    </nav>
+    <span class="mode-badge" id="price-mode">Sample prices</span>
   </div>
 </header>
 
-<nav class="tab-bar" id="tab-bar" aria-label="App sections">
-  <button type="button" class="tab is-active" data-panel="compare">
-    <span class="tab-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
-    </span>
-    <span>Compare</span>
-  </button>
-  <button type="button" class="tab" data-panel="meals">
-    <span class="tab-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 11h16v2a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6v-2z"/><path d="M8 11V5M12 11V3M16 11V7"/></svg>
-    </span>
-    <span>Meals</span>
-  </button>
-  <button type="button" class="tab" data-panel="savings">
-    <span class="tab-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M8 8h5.5a2.5 2.5 0 0 1 0 5H9m3.5 0H14a2.5 2.5 0 0 1 0 5H8"/></svg>
-    </span>
-    <span>Savings</span>
-  </button>
-</nav>
-
 <main id="top">
-  <!-- Hero: brand + one headline + one sentence + CTA + full-bleed visual -->
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="wrap hero-copy">
-      <p class="brand-hero">BasketWise</p>
-      <h1 id="hero-title">See which supermarket wins your weekly shop.</h1>
-      <p class="hero-lead">Compare Asda, Tesco and Morrisons on the same list — then swap dinners for lower-cost ingredients your family will actually eat.</p>
-      <div class="hero-cta">
-        <button type="button" class="btn primary" data-panel="compare">Compare my basket</button>
-        <button type="button" class="btn ghost" data-panel="meals">Find cheaper meals</button>
-      </div>
-    </div>
-    <div class="hero-visual" aria-hidden="true">
-      <div class="hero-wash"></div>
-      <svg class="hero-scene" viewBox="0 0 1440 720" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#9ED9D2"/>
-            <stop offset="55%" stop-color="#C8EBE6"/>
-            <stop offset="100%" stop-color="#EAF6F3"/>
-          </linearGradient>
-          <linearGradient id="counter" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#F7F1E3"/>
-            <stop offset="100%" stop-color="#E8DFC8"/>
-          </linearGradient>
-        </defs>
-        <rect width="1440" height="720" fill="url(#sky)"/>
-        <ellipse class="cloud c1" cx="220" cy="120" rx="110" ry="36" fill="#fff" opacity=".55"/>
-        <ellipse class="cloud c2" cx="1180" cy="90" rx="140" ry="42" fill="#fff" opacity=".45"/>
-        <ellipse class="cloud c3" cx="780" cy="150" rx="90" ry="28" fill="#fff" opacity=".35"/>
-        <!-- counter / table -->
-        <rect y="480" width="1440" height="240" fill="url(#counter)"/>
-        <rect y="470" width="1440" height="16" fill="#D9CFAE"/>
-        <!-- produce bowls -->
-        <g transform="translate(180 390)"><g class="float-a">
-          <ellipse cx="70" cy="90" rx="78" ry="18" fill="#0A5C5A" opacity=".12"/>
-          <path d="M10 70c0-40 30-70 70-70s70 30 70 70v10H10z" fill="#E85D4C"/>
-          <circle cx="45" cy="45" r="18" fill="#C94A3C"/>
-          <circle cx="78" cy="38" r="20" fill="#F2C94C"/>
-          <circle cx="108" cy="52" r="16" fill="#68A51F"/>
-        </g></g>
-        <!-- main basket -->
-        <g transform="translate(560 300)"><g class="basket-main">
-          <ellipse cx="160" cy="210" rx="150" ry="28" fill="#0A5C5A" opacity=".15"/>
-          <path d="M40 80h240l-18 140a28 28 0 0 1-28 24H86a28 28 0 0 1-28-24L40 80z" fill="#0A5C5A"/>
-          <path d="M55 80c0-55 45-95 105-95s105 40 105 95" stroke="#F2C94C" stroke-width="10" fill="none" stroke-linecap="round"/>
-          <rect x="70" y="100" width="70" height="55" rx="8" fill="#E8F6F4"/>
-          <rect x="150" y="95" width="55" height="65" rx="8" fill="#F2C94C"/>
-          <rect x="215" y="110" width="45" height="50" rx="8" fill="#9ED9D2"/>
-          <circle cx="100" cy="130" r="12" fill="#68A51F"/>
-          <circle cx="175" cy="125" r="14" fill="#E85D4C"/>
-        </g></g>
-      </svg>
-    </div>
-  </section>
+  <div class="stepper wrap" id="stepper" aria-label="Progress">
+    <div class="step-pill is-active" data-step-indicator="1"><span>1</span> List</div>
+    <div class="step-pill" data-step-indicator="2"><span>2</span> Stores</div>
+    <div class="step-pill" data-step-indicator="3"><span>3</span> Prices</div>
+    <div class="step-pill" data-step-indicator="4"><span>4</span> Journey</div>
+  </div>
 
   <div id="app" class="app wrap">
-    <!-- ========== Feature 1: Compare basket ========== -->
-    <section class="panel is-active" id="panel-compare" aria-labelledby="compare-title">
-      <header class="panel-head">
-        <div class="panel-title-row">
-          <h2 id="compare-title">Compare the whole shopping basket</h2>
-          <span class="mode-badge" id="price-mode">Sample prices</span>
-        </div>
-        <p>Type your list, speak it, or photograph a handwritten list. We’ll estimate totals for Asda, Tesco and Morrisons with price, pack size and last-updated date.</p>
-      </header>
+    <!-- STEP 1: List -->
+    <section class="step panel is-active" id="step-1" data-step="1" aria-labelledby="step1-title">
+      <div class="step-hero">
+        <p class="brand-hero">BasketWise</p>
+        <h1 id="step1-title">Enter your shopping list</h1>
+        <p class="hero-lead">Type it, speak it, or photograph a written list. Then we’ll compare shops and plan your trip.</p>
+      </div>
 
-      <div class="compare-layout">
-        <aside class="list-panel">
-          <label class="field-label" for="list-input">Your shopping list</label>
-          <div class="easy-add" role="group" aria-label="Add items without typing">
-            <button type="button" class="btn easy" id="btn-speak" aria-pressed="false">
-              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg>
-              Speak list
-            </button>
-            <button type="button" class="btn easy" id="btn-photo">
-              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
-              Photo of list
-            </button>
-            <input type="file" id="photo-input" accept="image/*" capture="environment" hidden>
-          </div>
-          <p class="hint" id="easy-hint">Tip: tap <strong>Speak list</strong> and say items with “and” or commas, or snap a photo of a written list.</p>
-          <textarea id="list-input" rows="8" spellcheck="true" enterkeyhint="done" autocomplete="off" autocapitalize="sentences" placeholder="One item per line&#10;e.g. Semi-skimmed milk&#10;White sliced loaf&#10;Chicken breast fillets"></textarea>
-          <div class="list-actions">
-            <button type="button" class="btn primary" id="btn-compare">Compare prices</button>
-            <button type="button" class="btn ghost" id="btn-sample">Load sample list</button>
-            <button type="button" class="btn ghost" id="btn-clear-list">Clear list</button>
-          </div>
-          <p class="hint" id="match-hint"></p>
-        </aside>
+      <div class="easy-add" role="group" aria-label="Add items without typing">
+        <button type="button" class="btn easy" id="btn-speak" aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg>
+          Speak list
+        </button>
+        <button type="button" class="btn easy" id="btn-photo">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+          Photo of list
+        </button>
+        <input type="file" id="photo-input" accept="image/*" capture="environment" hidden>
+      </div>
+      <p class="hint" id="easy-hint">Say items with “and” or commas, or snap a clear photo of a written list.</p>
 
-        <div class="results-panel">
-          <div class="store-totals" id="store-totals" role="list" aria-live="polite"></div>
-          <div class="table-wrap" id="compare-table-wrap">
-            <p class="empty-state">Add items and tap <strong>Compare prices</strong> to see store-by-store totals.</p>
-          </div>
-        </div>
+      <label class="field-label" for="list-input">Your shopping list</label>
+      <textarea id="list-input" rows="10" spellcheck="true" enterkeyhint="done" autocomplete="off" autocapitalize="sentences" placeholder="One item per line&#10;e.g. Semi-skimmed milk&#10;White sliced loaf&#10;Dog food"></textarea>
+
+      <div class="list-actions step-actions">
+        <button type="button" class="btn ghost" id="btn-sample">Load sample list</button>
+        <button type="button" class="btn ghost" id="btn-clear-list">Clear</button>
+        <button type="button" class="btn primary" id="btn-to-stores">Next: choose stores</button>
       </div>
     </section>
 
-    <!-- ========== Feature 2: Cheaper meals ========== -->
-    <section class="panel" id="panel-meals" aria-labelledby="meals-title" hidden>
+    <!-- STEP 2: Stores -->
+    <section class="step panel" id="step-2" data-step="2" hidden aria-labelledby="step2-title">
       <header class="panel-head">
-        <h2 id="meals-title">Find cheaper meals</h2>
-        <p>We’ll suggest alternative dinners that use lower-cost ingredients, while respecting dietary preferences and family dislikes.</p>
+        <h2 id="step2-title">Which stores do you want to use?</h2>
+        <p>Pick the supermarkets to include. You can shop at the single cheapest, or split the list across shops for the lowest item prices.</p>
       </header>
 
-      <div class="meals-controls">
-        <div class="control-block">
-          <span class="field-label">Dietary preference</span>
-          <div class="chip-row" id="diet-chips" role="group" aria-label="Dietary preference"></div>
+      <div class="store-pick" id="store-pick" role="group" aria-label="Stores to include"></div>
+
+      <div class="control-block">
+        <span class="field-label">How should we plan your trip?</span>
+        <div class="choice-stack" role="radiogroup" aria-label="Journey preference">
+          <label class="choice">
+            <input type="radio" name="journey-mode" value="single" checked>
+            <span>
+              <strong>One cheapest shop</strong>
+              <small>Buy everything where the whole basket costs least — simplest trip.</small>
+            </span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="journey-mode" value="split">
+            <span>
+              <strong>Split across stores</strong>
+              <small>Buy each item where it’s cheapest — may mean more than one stop.</small>
+            </span>
+          </label>
         </div>
-        <div class="control-block">
-          <span class="field-label">Family dislikes</span>
-          <div class="chip-row" id="dislike-chips" role="group" aria-label="Family dislikes"></div>
-        </div>
-        <div class="control-block">
-          <label class="field-label" for="meal-baseline">Compare against tonight’s plan</label>
-          <select id="meal-baseline"></select>
-        </div>
-        <button type="button" class="btn primary" id="btn-meals">Suggest cheaper dinners</button>
       </div>
 
-      <div class="meal-results" id="meal-results" aria-live="polite"></div>
+      <div class="control-block">
+        <label class="field-label" for="postcode">Rough area (optional)</label>
+        <input type="text" id="postcode" class="text-input" placeholder="e.g. LS1 or M1" maxlength="8" autocomplete="postal-code">
+        <p class="hint">Used later for turn-by-turn maps. For now we build a simple visit order.</p>
+      </div>
+
+      <div class="step-actions dual">
+        <button type="button" class="btn ghost" data-go-step="1">Back</button>
+        <button type="button" class="btn primary" id="btn-to-prices">Next: compare prices</button>
+      </div>
     </section>
 
-    <!-- ========== Feature 3: Real savings ========== -->
-    <section class="panel" id="panel-savings" aria-labelledby="savings-title" hidden>
+    <!-- STEP 3: Prices -->
+    <section class="step panel" id="step-3" data-step="3" hidden aria-labelledby="step3-title">
       <header class="panel-head">
-        <h2 id="savings-title">Show real savings</h2>
-        <p>Same list, fuller picture: pack-size differences, loyalty-card prices where available, and delivery charges where they apply.</p>
+        <h2 id="step3-title">Price comparison</h2>
+        <p id="compare-sub">Shelf totals for your list across the stores you picked.</p>
       </header>
 
-      <div class="savings-controls">
-        <label class="check">
-          <input type="checkbox" id="use-loyalty" checked>
-          <span>Apply loyalty prices (Clubcard, Asda Rewards, Morrisons More)</span>
-        </label>
-        <label class="check">
-          <input type="checkbox" id="include-delivery" checked>
-          <span>Include delivery charges</span>
-        </label>
-        <label class="check">
-          <input type="checkbox" id="normalise-packs" checked>
-          <span>Normalise pack-size differences (cost per comparable unit)</span>
-        </label>
-        <button type="button" class="btn primary" id="btn-savings">Calculate real totals</button>
+      <p class="hint" id="match-hint"></p>
+      <div class="store-totals" id="store-totals" role="list" aria-live="polite"></div>
+      <div class="table-wrap" id="compare-table-wrap"></div>
+
+      <div class="step-actions dual">
+        <button type="button" class="btn ghost" data-go-step="2">Back</button>
+        <button type="button" class="btn primary" id="btn-to-journey">Next: plan journey</button>
+      </div>
+    </section>
+
+    <!-- STEP 4: Journey -->
+    <section class="step panel" id="step-4" data-step="4" hidden aria-labelledby="step4-title">
+      <header class="panel-head">
+        <h2 id="step4-title">Your shopping journey</h2>
+        <p>Based on the prices — either one stop at the cheapest total, or a split journey with how much of the basket each store covers.</p>
+      </header>
+
+      <div class="journey-toggle" role="group" aria-label="Switch plan type">
+        <button type="button" class="chip is-on" data-plan="single" id="plan-single">One cheapest shop</button>
+        <button type="button" class="chip" data-plan="split" id="plan-split">Split journey</button>
       </div>
 
-      <div class="savings-summary" id="savings-summary" aria-live="polite"></div>
-      <div class="table-wrap" id="savings-table-wrap"></div>
+      <div id="journey-out" class="journey-out" aria-live="polite"></div>
+
+      <div class="step-actions dual">
+        <button type="button" class="btn ghost" data-go-step="3">Back</button>
+        <button type="button" class="btn ghost" data-go-step="1">Start again</button>
+      </div>
     </section>
   </div>
 </main>
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <p><strong>BasketWise</strong> uses illustrative UK supermarket prices for planning. Always check live prices and offers in-store or on the retailer’s site before you buy.</p>
-    <p class="fine">Sample catalogue last refreshed October 2026 · Not affiliated with Asda, Tesco or Morrisons.</p>
+    <p><strong>BasketWise</strong> uses illustrative UK supermarket prices unless a live Hobnight key is configured. Always check live prices before you buy.</p>
+    <p class="fine">Sample catalogue · Not affiliated with Asda, Tesco or Morrisons.</p>
   </div>
 </footer>
 

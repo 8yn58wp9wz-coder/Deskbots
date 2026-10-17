@@ -2,65 +2,50 @@
   const D = window.BasketWiseData;
   if (!D) return;
 
-  const STORE_IDS = ['asda', 'tesco', 'morrisons'];
+  const ALL_STORES = ['asda', 'tesco', 'morrisons'];
   const money = (n) => '£' + (Math.round(n * 100) / 100).toFixed(2);
   const fmtDate = (iso) => {
     if (!iso) return '—';
     const d = new Date(iso + 'T12:00:00');
     return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   };
+  const escapeHtml = (s) =>
+    String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
 
   /* ---------- State ---------- */
-  let diet = 'none';
-  let dislikes = new Set();
+  let step = 1;
+  let selectedStores = new Set(ALL_STORES);
+  let journeyPref = 'single'; // from step 2 radios
+  let activePlan = 'single'; // step 4 toggle
   let lastMatched = [];
   let liveMode = false;
   let comparing = false;
 
-  /* ---------- Nav / panels ---------- */
-  const panels = {
-    compare: document.getElementById('panel-compare'),
-    meals: document.getElementById('panel-meals'),
-    savings: document.getElementById('panel-savings'),
-  };
-  const navLinks = document.querySelectorAll('[data-panel]');
+  const listInput = document.getElementById('list-input');
+  const matchHint = document.getElementById('match-hint');
+  const storeTotals = document.getElementById('store-totals');
+  const compareWrap = document.getElementById('compare-table-wrap');
+  const easyHint = document.getElementById('easy-hint');
+  const journeyOut = document.getElementById('journey-out');
 
-  function showPanel(id) {
-    Object.keys(panels).forEach((key) => {
-      const el = panels[key];
-      const on = key === id;
-      el.hidden = !on;
-      el.classList.toggle('is-active', on);
-    });
-    document.querySelectorAll('.nav-link, .tab').forEach((btn) => {
-      btn.classList.toggle('is-active', btn.getAttribute('data-panel') === id);
-    });
-    if (id !== 'top') {
-      document.getElementById('app').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
-  navLinks.forEach((el) => {
-    el.addEventListener('click', () => showPanel(el.getAttribute('data-panel')));
-  });
-
-  document.querySelectorAll('[data-go]').forEach((a) => {
-    a.addEventListener('click', (e) => {
-      const sel = a.getAttribute('data-go');
-      const t = document.querySelector(sel);
-      if (!t) return;
-      e.preventDefault();
-      t.scrollIntoView({ behavior: 'smooth' });
-    });
-  });
-
-  /* ---------- Matching ---------- */
+  /* ---------- Helpers ---------- */
   function normalise(s) {
     return String(s || '')
       .toLowerCase()
       .replace(/[^a-z0-9\s]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  function parseList(text) {
+    return String(text || '')
+      .split(/\n|,/)
+      .map((l) => l.trim())
+      .filter(Boolean);
   }
 
   function matchProduct(line) {
@@ -88,234 +73,66 @@
     return bestScore >= 60 ? best : null;
   }
 
-  function parseList(text) {
-    return String(text || '')
-      .split(/\n|,/)
-      .map((l) => l.trim())
-      .filter(Boolean);
-  }
-
   function buildMatches(lines) {
-    return lines.map((line) => {
-      const product = matchProduct(line);
-      return { line, product };
-    });
+    return lines.map((line) => ({ line, product: matchProduct(line) }));
   }
-
-  /* ---------- Feature 1: Compare ---------- */
-  const listInput = document.getElementById('list-input');
-  const storeTotals = document.getElementById('store-totals');
-  const compareWrap = document.getElementById('compare-table-wrap');
-  const matchHint = document.getElementById('match-hint');
 
   function shelfPrice(offer, useLoyalty) {
-    if (useLoyalty && offer.loyalty != null) return offer.loyalty;
-    return offer.price;
+    if (useLoyalty && offer && offer.loyalty != null) return offer.loyalty;
+    return offer ? offer.price : null;
   }
 
-  function storeTotal(matches, storeId, useLoyalty) {
-    let sum = 0;
-    let count = 0;
-    matches.forEach((m) => {
-      if (!m.product || !m.product.offers) return;
-      const o = m.product.offers[storeId];
-      if (!o || o.price == null) return;
-      sum += shelfPrice(o, useLoyalty);
-      count += 1;
+  function activeStoreIds() {
+    return ALL_STORES.filter((id) => selectedStores.has(id));
+  }
+
+  /* ---------- Step navigation ---------- */
+  function goStep(n) {
+    step = n;
+    document.querySelectorAll('.step').forEach((el) => {
+      const on = Number(el.getAttribute('data-step')) === n;
+      el.hidden = !on;
+      el.classList.toggle('is-active', on);
     });
-    return { sum, count };
-  }
-
-  function setModeBadge() {
-    const el = document.getElementById('price-mode');
-    if (!el) return;
-    el.textContent = liveMode ? 'Live prices (Hobnight)' : 'Sample prices';
-    el.classList.toggle('is-live', liveMode);
-    el.title = liveMode
-      ? 'Using Hobnight UK catalogue via the local proxy'
-      : 'Illustrative sample catalogue — set HOBNIGHT_API_KEY to go live';
-  }
-
-  function renderCompare(matches) {
-    lastMatched = matches;
-    const matched = matches.filter((m) => m.product);
-    const unmatched = matches.filter((m) => !m.product);
-
-    matchHint.textContent = unmatched.length
-      ? matched.length +
-        ' matched · ' +
-        unmatched.length +
-        (liveMode ? ' not found in live catalogue' : ' not found in sample catalogue')
-      : matched.length +
-        ' items matched across Asda, Tesco and Morrisons' +
-        (liveMode ? ' (live)' : '');
-
-    if (!matches.length) {
-      storeTotals.innerHTML = '';
-      compareWrap.innerHTML =
-        '<p class="empty-state">Add items and tap <strong>Compare prices</strong> to see store-by-store totals.</p>';
-      return;
-    }
-
-    const totals = STORE_IDS.map((id) => {
-      const t = storeTotal(matches, id, false);
-      return { id, ...t, store: D.STORES[id] };
+    document.querySelectorAll('[data-step-indicator]').forEach((el) => {
+      const i = Number(el.getAttribute('data-step-indicator'));
+      el.classList.toggle('is-active', i === n);
+      el.classList.toggle('is-done', i < n);
     });
-    const bestSum = Math.min(...totals.map((t) => (t.count ? t.sum : Infinity)));
-
-    storeTotals.innerHTML = totals
-      .map((t) => {
-        const isBest = t.count && t.sum === bestSum;
-        return (
-          '<div class="store-card' +
-          (isBest ? ' is-best' : '') +
-          '" role="listitem">' +
-          (isBest ? '<span class="badge-best">Lowest</span>' : '') +
-          '<div class="store-name"><span class="dot" style="background:' +
-          t.store.colour +
-          '"></span>' +
-          t.store.name +
-          '</div>' +
-          '<div class="total">' +
-          (t.count ? money(t.sum) : '—') +
-          '</div>' +
-          '<div class="meta">' +
-          (t.count ? t.count + ' priced items · shelf prices' : 'No matches') +
-          '</div></div>'
-        );
-      })
-      .join('');
-
-    let rows = matches
-      .map((m) => {
-        if (!m.product) {
-          return (
-            '<tr><td>' +
-            escapeHtml(m.line) +
-            '</td><td colspan="3" class="unmatched">No match — try a simpler name</td></tr>'
-          );
-        }
-        const priced = STORE_IDS.map((id) => m.product.offers[id]).filter((o) => o && o.price != null);
-        const low = priced.length ? Math.min(...priced.map((o) => o.price)) : null;
-        const cells = STORE_IDS.map((id) => {
-          const o = m.product.offers[id];
-          if (!o || o.price == null) {
-            return '<td class="price-cell"><span class="pack">No price</span></td>';
-          }
-          const lowClass = o.price === low ? ' is-low' : '';
-          return (
-            '<td class="price-cell' +
-            lowClass +
-            '"><span class="amount">' +
-            money(o.price) +
-            '</span>' +
-            '<span class="pack">' +
-            escapeHtml(o.pack) +
-            (o.unit ? ' · ' + escapeHtml(o.unit) : '') +
-            '</span>' +
-            '<span class="updated">Updated ' +
-            fmtDate(o.updated) +
-            '</span></td>'
-          );
-        }).join('');
-        return (
-          '<tr><td><strong>' +
-          escapeHtml(m.product.name) +
-          '</strong><div class="pack" style="color:var(--muted)">' +
-          escapeHtml(m.line !== m.product.name ? 'from “' + m.line + '”' : m.product.category) +
-          '</div></td>' +
-          cells +
-          '</tr>'
-        );
-      })
-      .join('');
-
-    const cards = matches
-      .map((m) => {
-        if (!m.product) {
-          return (
-            '<article class="item-card"><h3>' +
-            escapeHtml(m.line) +
-            '</h3><p class="unmatched">No match' +
-            (liveMode ? ' in live catalogue' : ' in sample catalogue') +
-            '</p></article>'
-          );
-        }
-        const priced = STORE_IDS.map((id) => m.product.offers[id]).filter((o) => o && o.price != null);
-        const low = priced.length ? Math.min(...priced.map((o) => o.price)) : null;
-        const offers = STORE_IDS.map((id) => {
-          const o = m.product.offers[id];
-          const store = D.STORES[id];
-          if (!o || o.price == null) {
-            return (
-              '<div class="offer-row"><div class="offer-store"><span class="dot" style="background:' +
-              store.colour +
-              '"></span>' +
-              store.short +
-              '</div><div class="offer-price">—</div><div class="offer-meta">No price</div></div>'
-            );
-          }
-          const best = o.price === low;
-          return (
-            '<div class="offer-row' +
-            (best ? ' is-best' : '') +
-            '"><div class="offer-store"><span class="dot" style="background:' +
-            store.colour +
-            '"></span>' +
-            store.short +
-            (best ? ' · lowest' : '') +
-            '</div><div class="offer-price">' +
-            money(o.price) +
-            '</div><div class="offer-meta">' +
-            escapeHtml(o.pack) +
-            (o.unit ? ' · ' + escapeHtml(o.unit) : '') +
-            '<br>Updated ' +
-            fmtDate(o.updated) +
-            '</div></div>'
-          );
-        }).join('');
-        return (
-          '<article class="item-card"><h3>' +
-          escapeHtml(m.product.name) +
-          '</h3><p class="item-cat">' +
-          escapeHtml(m.product.category) +
-          '</p><div class="offer-list">' +
-          offers +
-          '</div></article>'
-        );
-      })
-      .join('');
-
-    compareWrap.innerHTML =
-      '<div class="mobile-cards">' +
-      cards +
-      '</div><div class="desktop-table"><table class="compare"><thead><tr><th>Product</th><th>Asda</th><th>Tesco</th><th>Morrisons</th></tr></thead><tbody>' +
-      rows +
-      '</tbody></table></div>';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function escapeHtml(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+  document.querySelectorAll('[data-go-step]').forEach((btn) => {
+    btn.addEventListener('click', () => goStep(Number(btn.getAttribute('data-go-step'))));
+  });
 
+  document.getElementById('brand-home').addEventListener('click', (e) => {
+    e.preventDefault();
+    goStep(1);
+  });
+
+  /* ---------- Step 1: list ---------- */
   document.getElementById('btn-sample').addEventListener('click', () => {
     listInput.value = D.DEFAULT_LIST.join('\n');
-    if (liveMode) runCompare();
-    else renderCompare(buildMatches(D.DEFAULT_LIST));
+    easyHint.textContent = 'Sample list loaded — tap Next when you’re ready.';
   });
 
   document.getElementById('btn-clear-list').addEventListener('click', () => {
     listInput.value = '';
-    matchHint.textContent = '';
-    renderCompare([]);
+    easyHint.textContent = 'List cleared.';
   });
 
-  /* ---------- Easy input: speak + photo OCR ---------- */
-  const easyHint = document.getElementById('easy-hint');
+  document.getElementById('btn-to-stores').addEventListener('click', () => {
+    const lines = parseList(listInput.value);
+    if (!lines.length) {
+      easyHint.textContent = 'Add at least one item (type, speak, or photo) before continuing.';
+      listInput.focus();
+      return;
+    }
+    goStep(2);
+  });
+
+  /* Speak + photo (same as before) */
   const btnSpeak = document.getElementById('btn-speak');
   const btnPhoto = document.getElementById('btn-photo');
   const photoInput = document.getElementById('photo-input');
@@ -344,8 +161,7 @@
       seen.add(key);
       added.push(item);
     });
-    const merged = existing.concat(added);
-    listInput.value = merged.join('\n');
+    listInput.value = existing.concat(added).join('\n');
     return added.length;
   }
 
@@ -367,11 +183,6 @@
       });
   }
 
-  function getSpeechRecognition() {
-    const Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
-    return Ctor ? new Ctor() : null;
-  }
-
   function stopListening() {
     listening = false;
     btnSpeak.classList.remove('is-listening');
@@ -386,36 +197,34 @@
   btnSpeak.addEventListener('click', () => {
     if (listening) {
       stopListening();
-      easyHint.textContent = 'Listening stopped. Edit the list if needed, then compare.';
+      easyHint.textContent = 'Listening stopped. Edit if needed, then tap Next.';
       return;
     }
-    recognition = getSpeechRecognition();
-    if (!recognition) {
-      easyHint.textContent =
-        'Voice isn’t supported in this browser. Try Chrome or Safari on your phone, or use Photo of list.';
+    const Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Ctor) {
+      easyHint.textContent = 'Voice isn’t supported here — try Chrome/Safari, or use Photo of list.';
       return;
     }
+    recognition = new Ctor();
     recognition.lang = 'en-GB';
     recognition.interimResults = true;
     recognition.continuous = true;
-    recognition.maxAlternatives = 1;
-
     let finalChunk = '';
     recognition.onstart = () => {
       listening = true;
       btnSpeak.classList.add('is-listening');
       btnSpeak.setAttribute('aria-pressed', 'true');
       btnSpeak.textContent = 'Listening… tap to stop';
-      easyHint.textContent = 'Listening — say items like “milk and bread and eggs”. Tap again to stop.';
+      easyHint.textContent = 'Listening — say “milk and bread and eggs”. Tap again to stop.';
     };
     recognition.onerror = (ev) => {
       stopListening();
-      const why = ev.error === 'not-allowed' ? 'Microphone permission blocked.' : 'Voice error: ' + ev.error;
-      easyHint.textContent = why + ' You can still type or use a photo.';
+      easyHint.textContent =
+        (ev.error === 'not-allowed' ? 'Microphone permission blocked.' : 'Voice error: ' + ev.error) +
+        ' You can still type or use a photo.';
     };
     recognition.onend = () => {
       if (!listening) return;
-      // Some browsers end after a pause — restart while user still wants listening
       try {
         recognition.start();
       } catch (_) {
@@ -429,21 +238,19 @@
         if (event.results[i].isFinal) finalChunk += ' ' + t;
         else interim += t;
       }
-      const items = speechItemsFromTranscript(finalChunk + ' ' + interim);
-      if (items.length) {
-        easyHint.textContent = 'Heard: ' + items.slice(-6).join(', ');
-      }
+      const preview = speechItemsFromTranscript(finalChunk + ' ' + interim);
+      if (preview.length) easyHint.textContent = 'Heard: ' + preview.slice(-6).join(', ');
       if (finalChunk.trim()) {
         const added = appendListItems(speechItemsFromTranscript(finalChunk));
         finalChunk = '';
-        if (added) easyHint.textContent = 'Added ' + added + ' item' + (added === 1 ? '' : 's') + ' from speech. Keep talking or tap to stop.';
+        if (added) easyHint.textContent = 'Added ' + added + ' item' + (added === 1 ? '' : 's') + '. Keep talking or tap to stop.';
       }
     };
     try {
       recognition.start();
-    } catch (err) {
+    } catch (_) {
       stopListening();
-      easyHint.textContent = 'Could not start the microphone. Check phone permissions.';
+      easyHint.textContent = 'Could not start the microphone.';
     }
   });
 
@@ -462,14 +269,13 @@
   }
 
   btnPhoto.addEventListener('click', () => photoInput.click());
-
   photoInput.addEventListener('change', async () => {
     const file = photoInput.files && photoInput.files[0];
     photoInput.value = '';
     if (!file) return;
     btnPhoto.disabled = true;
     btnPhoto.textContent = 'Reading photo…';
-    easyHint.textContent = 'Reading your list photo — this can take a few seconds…';
+    easyHint.textContent = 'Reading your list photo…';
     try {
       const Tesseract = await loadTesseract();
       const result = await Tesseract.recognize(file, 'eng', {
@@ -481,24 +287,11 @@
       });
       const lines = ocrLinesFromText(result?.data?.text || '');
       const added = appendListItems(lines);
-      if (!lines.length) {
-        easyHint.textContent =
-          'Couldn’t read any items. Try a clearer photo in good light, or type/speak instead.';
-      } else {
-        easyHint.textContent =
-          'Found ' +
-          lines.length +
-          ' line' +
-          (lines.length === 1 ? '' : 's') +
-          ' · added ' +
-          added +
-          ' new item' +
-          (added === 1 ? '' : 's') +
-          '. Check the list, then Compare prices.';
-        listInput.focus();
-      }
+      easyHint.textContent = lines.length
+        ? 'Found ' + lines.length + ' lines · added ' + added + ' new. Check the list, then Next.'
+        : 'Couldn’t read items — try a clearer photo, or type/speak.';
     } catch (err) {
-      easyHint.textContent = (err && err.message) || 'Photo reading failed. Try again or type the list.';
+      easyHint.textContent = (err && err.message) || 'Photo reading failed.';
     } finally {
       btnPhoto.disabled = false;
       btnPhoto.innerHTML =
@@ -506,9 +299,212 @@
     }
   });
 
+  /* ---------- Step 2: stores ---------- */
+  function renderStorePick() {
+    const wrap = document.getElementById('store-pick');
+    wrap.innerHTML = ALL_STORES.map((id) => {
+      const s = D.STORES[id];
+      const on = selectedStores.has(id);
+      return (
+        '<button type="button" class="store-toggle' +
+        (on ? ' is-on' : '') +
+        '" data-store="' +
+        id +
+        '" aria-pressed="' +
+        on +
+        '"><span class="dot" style="background:' +
+        s.colour +
+        '"></span><span class="store-toggle-name">' +
+        s.name +
+        '</span><span class="store-toggle-state">' +
+        (on ? 'Included' : 'Off') +
+        '</span></button>'
+      );
+    }).join('');
+  }
+
+  document.getElementById('store-pick').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-store]');
+    if (!btn) return;
+    const id = btn.getAttribute('data-store');
+    if (selectedStores.has(id)) {
+      if (selectedStores.size === 1) return; // keep at least one
+      selectedStores.delete(id);
+    } else selectedStores.add(id);
+    renderStorePick();
+  });
+
+  document.querySelectorAll('input[name="journey-mode"]').forEach((r) => {
+    r.addEventListener('change', () => {
+      if (r.checked) journeyPref = r.value;
+    });
+  });
+
+  document.getElementById('btn-to-prices').addEventListener('click', async () => {
+    journeyPref = (document.querySelector('input[name="journey-mode"]:checked') || {}).value || 'single';
+    activePlan = journeyPref;
+    document.getElementById('plan-single').classList.toggle('is-on', activePlan === 'single');
+    document.getElementById('plan-split').classList.toggle('is-on', activePlan === 'split');
+    goStep(3);
+    await runCompare();
+  });
+
+  /* ---------- Step 3: compare ---------- */
+  function storeTotal(matches, storeId) {
+    let sum = 0;
+    let count = 0;
+    matches.forEach((m) => {
+      if (!m.product || !m.product.offers) return;
+      const o = m.product.offers[storeId];
+      if (!o || o.price == null) return;
+      sum += o.price;
+      count += 1;
+    });
+    return { sum, count };
+  }
+
+  function renderCompare(matches) {
+    lastMatched = matches;
+    const stores = activeStoreIds();
+    const matched = matches.filter((m) => m.product);
+    const unmatched = matches.filter((m) => !m.product);
+
+    matchHint.textContent = unmatched.length
+      ? matched.length + ' matched · ' + unmatched.length + ' not found'
+      : matched.length + ' items compared' + (liveMode ? ' (live)' : '');
+
+    const totals = stores.map((id) => {
+      const t = storeTotal(matches, id);
+      return { id, ...t, store: D.STORES[id] };
+    });
+    const bestSum = Math.min(...totals.map((t) => (t.count ? t.sum : Infinity)));
+
+    storeTotals.innerHTML = totals
+      .map((t) => {
+        const isBest = t.count && t.sum === bestSum;
+        return (
+          '<div class="store-card' +
+          (isBest ? ' is-best' : '') +
+          '" role="listitem">' +
+          (isBest ? '<span class="badge-best">Lowest</span>' : '') +
+          '<div class="store-name"><span class="dot" style="background:' +
+          t.store.colour +
+          '"></span>' +
+          t.store.name +
+          '</div><div class="total">' +
+          (t.count ? money(t.sum) : '—') +
+          '</div><div class="meta">' +
+          (t.count ? t.count + ' priced items' : 'No matches') +
+          '</div></div>'
+        );
+      })
+      .join('');
+
+    const cards = matches
+      .map((m) => {
+        if (!m.product) {
+          return (
+            '<article class="item-card"><h3>' +
+            escapeHtml(m.line) +
+            '</h3><p class="unmatched">No match</p></article>'
+          );
+        }
+        const priced = stores
+          .map((id) => m.product.offers[id])
+          .filter((o) => o && o.price != null);
+        const low = priced.length ? Math.min(...priced.map((o) => o.price)) : null;
+        const offers = stores
+          .map((id) => {
+            const o = m.product.offers[id];
+            const store = D.STORES[id];
+            if (!o || o.price == null) {
+              return (
+                '<div class="offer-row"><div class="offer-store"><span class="dot" style="background:' +
+                store.colour +
+                '"></span>' +
+                store.short +
+                '</div><div class="offer-price">—</div><div class="offer-meta">No price</div></div>'
+              );
+            }
+            const best = o.price === low;
+            return (
+              '<div class="offer-row' +
+              (best ? ' is-best' : '') +
+              '"><div class="offer-store"><span class="dot" style="background:' +
+              store.colour +
+              '"></span>' +
+              store.short +
+              (best ? ' · lowest' : '') +
+              '</div><div class="offer-price">' +
+              money(o.price) +
+              '</div><div class="offer-meta">' +
+              escapeHtml(o.pack) +
+              (o.unit ? ' · ' + escapeHtml(o.unit) : '') +
+              '<br>Updated ' +
+              fmtDate(o.updated) +
+              '</div></div>'
+            );
+          })
+          .join('');
+        return (
+          '<article class="item-card"><h3>' +
+          escapeHtml(m.product.name) +
+          '</h3><p class="item-cat">' +
+          escapeHtml(m.product.category) +
+          '</p><div class="offer-list">' +
+          offers +
+          '</div></article>'
+        );
+      })
+      .join('');
+
+    const head = stores.map((id) => '<th>' + D.STORES[id].name + '</th>').join('');
+    const rows = matches
+      .map((m) => {
+        if (!m.product) {
+          return (
+            '<tr><td>' +
+            escapeHtml(m.line) +
+            '</td><td colspan="' +
+            stores.length +
+            '" class="unmatched">No match</td></tr>'
+          );
+        }
+        const priced = stores.map((id) => m.product.offers[id]).filter((o) => o && o.price != null);
+        const low = priced.length ? Math.min(...priced.map((o) => o.price)) : null;
+        const cells = stores
+          .map((id) => {
+            const o = m.product.offers[id];
+            if (!o || o.price == null) return '<td class="price-cell"><span class="pack">—</span></td>';
+            return (
+              '<td class="price-cell' +
+              (o.price === low ? ' is-low' : '') +
+              '"><span class="amount">' +
+              money(o.price) +
+              '</span><span class="pack">' +
+              escapeHtml(o.pack) +
+              '</span><span class="updated">' +
+              fmtDate(o.updated) +
+              '</span></td>'
+            );
+          })
+          .join('');
+        return '<tr><td><strong>' + escapeHtml(m.product.name) + '</strong></td>' + cells + '</tr>';
+      })
+      .join('');
+
+    compareWrap.innerHTML =
+      '<div class="mobile-cards">' +
+      cards +
+      '</div><div class="desktop-table"><table class="compare"><thead><tr><th>Product</th>' +
+      head +
+      '</tr></thead><tbody>' +
+      rows +
+      '</tbody></table></div>';
+  }
+
   async function runCompare() {
     const lines = parseList(listInput.value);
-    const btn = document.getElementById('btn-compare');
     if (!lines.length) {
       renderCompare([]);
       return;
@@ -519,9 +515,7 @@
     }
     if (comparing) return;
     comparing = true;
-    btn.disabled = true;
-    btn.textContent = 'Fetching live prices…';
-    matchHint.textContent = 'Talking to Hobnight…';
+    matchHint.textContent = 'Fetching live prices…';
     try {
       const res = await fetch('/api/basket', {
         method: 'POST',
@@ -545,489 +539,254 @@
       }));
       renderCompare(matches);
     } catch (err) {
-      matchHint.textContent = 'Live compare failed: ' + (err.message || 'error') + ' — falling back to sample.';
+      matchHint.textContent = 'Live failed — using sample. ' + (err.message || '');
       renderCompare(buildMatches(lines));
     } finally {
       comparing = false;
-      btn.disabled = false;
-      btn.textContent = 'Compare prices';
     }
   }
 
-  document.getElementById('btn-compare').addEventListener('click', () => {
-    runCompare();
+  document.getElementById('btn-to-journey').addEventListener('click', () => {
+    if (!lastMatched.length) {
+      matchHint.textContent = 'Run a comparison first.';
+      return;
+    }
+    goStep(4);
+    renderJourney();
   });
 
-  /* ---------- Feature 2: Meals ---------- */
-  const dietChips = document.getElementById('diet-chips');
-  const dislikeChips = document.getElementById('dislike-chips');
-  const mealBaseline = document.getElementById('meal-baseline');
-  const mealResults = document.getElementById('meal-results');
+  /* ---------- Step 4: journey ---------- */
+  function buildPlans(matches) {
+    const stores = activeStoreIds();
+    const items = matches.filter((m) => m.product);
 
-  function mealCost(meal, useLoyalty) {
-    let sum = 0;
-    const lines = meal.ingredients.map((pid) => {
-      const product = D.PRODUCTS.find((p) => p.id === pid);
-      let best = Infinity;
-      let bestStore = null;
-      STORE_IDS.forEach((sid) => {
-        const o = product.offers[sid];
-        const p = shelfPrice(o, useLoyalty);
-        if (p < best) {
-          best = p;
-          bestStore = sid;
-        }
+    // Single-shop: full basket at each store, pick cheapest complete-ish total
+    const singles = stores.map((id) => {
+      let sum = 0;
+      let count = 0;
+      const lines = [];
+      items.forEach((m) => {
+        const o = m.product.offers[id];
+        if (!o || o.price == null) return;
+        sum += o.price;
+        count += 1;
+        lines.push({ name: m.product.name, price: o.price, pack: o.pack });
       });
-      sum += best;
-      return { product, best, bestStore };
+      return { id, store: D.STORES[id], sum, count, lines };
     });
-    return { sum, lines };
-  }
+    const bestSingle = singles
+      .filter((s) => s.count)
+      .sort((a, b) => a.sum - b.sum || b.count - a.count)[0];
 
-  function mealAllowed(meal) {
-    if (!meal.diets.includes(diet)) return false;
-    for (const d of dislikes) {
-      if (meal.tags.includes(d) || meal.avoid.includes(d)) return false;
+    // Split: each item to cheapest selected store
+    const buckets = {};
+    stores.forEach((id) => {
+      buckets[id] = { id, store: D.STORES[id], sum: 0, lines: [] };
+    });
+    let splitTotal = 0;
+    let assigned = 0;
+    items.forEach((m) => {
+      let best = null;
+      stores.forEach((id) => {
+        const o = m.product.offers[id];
+        if (!o || o.price == null) return;
+        if (!best || o.price < best.price) best = { id, price: o.price, pack: o.pack };
+      });
+      if (!best) return;
+      buckets[best.id].sum += best.price;
+      buckets[best.id].lines.push({ name: m.product.name, price: best.price, pack: best.pack });
+      splitTotal += best.price;
+      assigned += 1;
+    });
+
+    const splitStops = Object.values(buckets)
+      .filter((b) => b.lines.length)
+      .sort((a, b) => b.sum - a.sum)
+      .map((b) => ({
+        ...b,
+        pct: splitTotal > 0 ? Math.round((b.sum / splitTotal) * 100) : 0,
+        itemPct: assigned > 0 ? Math.round((b.lines.length / assigned) * 100) : 0,
+      }));
+
+    // Fix rounding so pcts sum ~100
+    if (splitStops.length) {
+      const drift = 100 - splitStops.reduce((a, b) => a + b.pct, 0);
+      splitStops[0].pct += drift;
     }
-    return true;
+
+    const worstSingle = singles.filter((s) => s.count).sort((a, b) => b.sum - a.sum)[0];
+
+    return { bestSingle, singles, splitStops, splitTotal, worstSingle, assigned };
   }
 
-  function renderMealControls() {
-    dietChips.innerHTML = D.DIETS.map((d) => {
-      return (
-        '<button type="button" class="chip' +
-        (diet === d.id ? ' is-on' : '') +
-        '" data-diet="' +
-        d.id +
-        '">' +
-        d.label +
-        '</button>'
-      );
-    }).join('');
+  function renderJourney() {
+    const plans = buildPlans(lastMatched);
+    const postcode = (document.getElementById('postcode').value || '').trim().toUpperCase();
+    const areaNote = postcode ? ' near <strong>' + escapeHtml(postcode) + '</strong>' : '';
 
-    dislikeChips.innerHTML = D.DISLIKES.map((d) => {
-      return (
-        '<button type="button" class="chip' +
-        (dislikes.has(d.id) ? ' is-on' : '') +
-        '" data-dislike="' +
-        d.id +
-        '" aria-pressed="' +
-        (dislikes.has(d.id) ? 'true' : 'false') +
-        '">' +
-        d.label +
-        '</button>'
-      );
-    }).join('');
-
-    mealBaseline.innerHTML = D.MEALS.map((m) => {
-      return '<option value="' + m.id + '">' + escapeHtml(m.name) + '</option>';
-    }).join('');
-  }
-
-  dietChips.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-diet]');
-    if (!btn) return;
-    diet = btn.getAttribute('data-diet');
-    renderMealControls();
-  });
-
-  dislikeChips.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-dislike]');
-    if (!btn) return;
-    const id = btn.getAttribute('data-dislike');
-    if (dislikes.has(id)) dislikes.delete(id);
-    else dislikes.add(id);
-    renderMealControls();
-  });
-
-  function suggestMeals() {
-    const baseId = mealBaseline.value;
-    const base = D.MEALS.find((m) => m.id === baseId);
-    const baseCost = mealCost(base, true);
-
-    const candidates = D.MEALS.filter((m) => mealAllowed(m) && m.id !== baseId)
-      .map((m) => {
-        const c = mealCost(m, true);
-        return { meal: m, cost: c, save: baseCost.sum - c.sum };
-      })
-      .filter((x) => x.save > 0.05)
-      .sort((a, b) => b.save - a.save);
-
-    const cheaperAlts = candidates.filter(
-      (x) => x.meal.swapFrom === baseId || x.save > 0
-    );
-
-    const show = (cheaperAlts.length ? cheaperAlts : candidates).slice(0, 4);
-
-    const baseCard =
-      '<article class="meal-card">' +
-      '<h3>' +
-      escapeHtml(base.name) +
-      ' <span style="font-weight:500;color:var(--muted);font-size:.85rem">(tonight)</span></h3>' +
-      '<div class="meal-meta"><span>' +
-      base.serves +
-      ' servings</span><span>' +
-      base.time +
-      ' mins</span></div>' +
-      '<div class="meal-cost">' +
-      money(baseCost.sum) +
-      '</div>' +
-      '<p class="meal-tip" style="margin-top:.5rem">Best-store ingredient total (loyalty where available).</p>' +
-      '<ul class="ing-list">' +
-      baseCost.lines
-        .map(
-          (l) =>
-            '<li><span>' +
-            escapeHtml(l.product.name) +
-            '</span><span>' +
-            money(l.best) +
-            '</span></li>'
-        )
-        .join('') +
-      '</ul></article>';
-
-    if (!mealAllowed(base) && show.length === 0) {
-      mealResults.innerHTML =
-        '<p class="empty-state">Tonight’s plan doesn’t match your preferences. Pick another baseline or loosen a dislike.</p>';
+    if (activePlan === 'single') {
+      const b = plans.bestSingle;
+      if (!b) {
+        journeyOut.innerHTML = '<p class="empty-state">No priced items to plan a journey.</p>';
+        return;
+      }
+      const save =
+        plans.worstSingle && plans.worstSingle.id !== b.id
+          ? plans.worstSingle.sum - b.sum
+          : 0;
+      journeyOut.innerHTML =
+        '<div class="journey-hero-card">' +
+        '<p class="journey-kicker">Recommended trip</p>' +
+        '<h3>Shop everything at ' +
+        escapeHtml(b.store.name) +
+        '</h3>' +
+        '<p class="journey-lead">One stop' +
+        areaNote +
+        ' — simplest journey for this list.</p>' +
+        '<div class="journey-stat">' +
+        money(b.sum) +
+        '<span> for ' +
+        b.count +
+        ' items</span></div>' +
+        (save > 0.009
+          ? '<p class="meal-save">Save ' +
+            money(save) +
+            ' vs shopping the whole list at ' +
+            escapeHtml(plans.worstSingle.store.name) +
+            '</p>'
+          : '') +
+        '</div>' +
+        '<div class="journey-stop">' +
+        '<div class="journey-stop-head"><span class="dot" style="background:' +
+        b.store.colour +
+        '"></span><strong>Stop 1 · ' +
+        escapeHtml(b.store.name) +
+        '</strong><span>100% of basket</span></div>' +
+        '<ul class="ing-list">' +
+        b.lines
+          .map(
+            (l) =>
+              '<li><span>' + escapeHtml(l.name) + '</span><span>' + money(l.price) + '</span></li>'
+          )
+          .join('') +
+        '</ul></div>' +
+        '<p class="hint">Prefer splitting for lower item prices? Tap <strong>Split journey</strong> above.</p>';
       return;
     }
 
-    if (!show.length) {
-      mealResults.innerHTML =
-        baseCard +
-        '<p class="empty-state">No cheaper alternatives match these preferences right now. Try clearing a dislike or switching diet.</p>';
+    // Split journey
+    const stops = plans.splitStops;
+    if (!stops.length) {
+      journeyOut.innerHTML = '<p class="empty-state">No priced items to split.</p>';
       return;
     }
+    const vsSingle =
+      plans.bestSingle && plans.splitTotal < plans.bestSingle.sum
+        ? plans.bestSingle.sum - plans.splitTotal
+        : 0;
 
-    const altCards = show
-      .map((x, i) => {
-        const m = x.meal;
+    const bars = stops
+      .map(
+        (s) =>
+          '<div class="pct-row"><div class="pct-label"><span class="dot" style="background:' +
+          s.store.colour +
+          '"></span>' +
+          escapeHtml(s.store.name) +
+          '</div><div class="pct-track"><i style="width:' +
+          s.pct +
+          '%;background:' +
+          s.store.colour +
+          '"></i></div><div class="pct-val">' +
+          s.pct +
+          '%</div></div>'
+      )
+      .join('');
+
+    const stopCards = stops
+      .map((s, i) => {
         return (
-          '<article class="meal-card alt" style="animation-delay:' +
-          i * 0.06 +
-          's">' +
-          '<h3>' +
-          escapeHtml(m.name) +
-          '</h3>' +
-          '<div class="meal-meta"><span>' +
-          m.serves +
-          ' servings</span><span>' +
-          m.time +
-          ' mins</span></div>' +
-          '<div class="meal-cost">' +
-          money(x.cost.sum) +
-          '</div>' +
-          '<span class="meal-save">Save ' +
-          money(x.save) +
-          ' vs tonight</span>' +
-          '<p class="meal-tip">' +
-          escapeHtml(m.tip) +
-          '</p>' +
+          '<div class="journey-stop">' +
+          '<div class="journey-stop-head"><span class="step-num">' +
+          (i + 1) +
+          '</span><span class="dot" style="background:' +
+          s.store.colour +
+          '"></span><strong>' +
+          escapeHtml(s.store.name) +
+          '</strong><span>' +
+          s.pct +
+          '% of spend · ' +
+          s.lines.length +
+          ' items</span></div>' +
           '<ul class="ing-list">' +
-          x.cost.lines
+          s.lines
             .map(
               (l) =>
-                '<li><span>' +
-                escapeHtml(l.product.name) +
-                '</span><span>' +
-                money(l.best) +
-                '</span></li>'
+                '<li><span>' + escapeHtml(l.name) + '</span><span>' + money(l.price) + '</span></li>'
             )
             .join('') +
-          '</ul></article>'
+          '</ul><div class="offer-meta">Subtotal ' +
+          money(s.sum) +
+          '</div></div>'
         );
       })
       .join('');
 
-    mealResults.innerHTML = baseCard + altCards;
+    const orderText = stops.map((s) => s.store.name + ' (' + s.pct + '%)').join(' → ');
+
+    journeyOut.innerHTML =
+      '<div class="journey-hero-card">' +
+      '<p class="journey-kicker">Split shopping journey</p>' +
+      '<h3>' +
+      escapeHtml(orderText) +
+      '</h3>' +
+      '<p class="journey-lead">Visit order' +
+      areaNote +
+      ' — each item bought where it’s cheapest among your selected stores.</p>' +
+      '<div class="journey-stat">' +
+      money(plans.splitTotal) +
+      '<span> combined · ' +
+      plans.assigned +
+      ' items</span></div>' +
+      (vsSingle > 0.009
+        ? '<p class="meal-save">About ' +
+          money(vsSingle) +
+          ' less than buying everything at ' +
+          escapeHtml(plans.bestSingle.store.name) +
+          '</p>'
+        : '<p class="hint">Split total is similar to the single cheapest shop — one stop may be easier.</p>') +
+      '</div>' +
+      '<div class="pct-block">' +
+      bars +
+      '</div>' +
+      stopCards +
+      '<p class="hint">Want the simplest trip instead? Tap <strong>One cheapest shop</strong>.</p>';
   }
 
-  document.getElementById('btn-meals').addEventListener('click', suggestMeals);
-
-  /* ---------- Feature 3: Real savings ---------- */
-  function packGrams(pack) {
-    const s = String(pack).toLowerCase();
-    let m = s.match(/([\d.]+)\s*kg/);
-    if (m) return parseFloat(m[1]) * 1000;
-    m = s.match(/([\d.]+)\s*g\b/);
-    if (m) return parseFloat(m[1]);
-    m = s.match(/([\d.]+)\s*l\b/);
-    if (m) return parseFloat(m[1]) * 1000; // treat L ~ ml for milk-ish
-    m = s.match(/([\d.]+)\s*ml/);
-    if (m) return parseFloat(m[1]);
-    m = s.match(/(\d+)\s*pack/);
-    if (m) return parseFloat(m[1]);
-    return null;
-  }
-
-  /** Relative cost index vs median pack among stores — higher pack = lower unit index */
-  function normalisedLineCost(product, storeId, useLoyalty) {
-    const offer = product.offers[storeId];
-    if (!offer || offer.price == null) return { price: 0, adjusted: 0, note: '—' };
-    const price = shelfPrice(offer, useLoyalty);
-    const grams = packGrams(offer.pack);
-    if (!grams) return { price, adjusted: price, note: offer.pack };
-
-    const packs = STORE_IDS.map((id) => {
-      const o = product.offers[id];
-      return o ? packGrams(o.pack) : null;
-    }).filter(Boolean);
-    const ref = packs.reduce((a, b) => a + b, 0) / packs.length;
-    const adjusted = price * (ref / grams);
-    return {
-      price,
-      adjusted,
-      note: offer.pack + (Math.abs(grams - ref) > 1 ? ' → scaled to ~' + Math.round(ref) + 'g eq.' : ''),
-    };
-  }
-
-  function deliveryFee(storeId, goodsTotal) {
-    const d = D.STORES[storeId].delivery;
-    if (goodsTotal >= d.freeOver) return 0;
-    return d.fee;
-  }
-
-  function renderSavings() {
-    const lines = parseList(listInput.value);
-    const matches = lines.length ? buildMatches(lines) : lastMatched.length ? lastMatched : buildMatches(D.DEFAULT_LIST);
-    if (!listInput.value.trim() && !lastMatched.length) {
-      listInput.value = D.DEFAULT_LIST.join('\n');
-    }
-
-    const useLoyalty = document.getElementById('use-loyalty').checked;
-    const includeDelivery = document.getElementById('include-delivery').checked;
-    const normalise = document.getElementById('normalise-packs').checked;
-
-    const results = STORE_IDS.map((sid) => {
-      let goods = 0;
-      let goodsShelf = 0;
-      let loyaltySaving = 0;
-      const detail = [];
-
-      matches.forEach((m) => {
-        if (!m.product || !m.product.offers) return;
-        const o = m.product.offers[sid];
-        if (!o || o.price == null) return;
-        const shelf = o.price;
-        const paid = shelfPrice(o, useLoyalty);
-        goodsShelf += shelf;
-        if (useLoyalty && o.loyalty != null) loyaltySaving += shelf - o.loyalty;
-
-        if (normalise) {
-          const n = normalisedLineCost(m.product, sid, useLoyalty);
-          goods += n.adjusted;
-          detail.push({ name: m.product.name, display: n.adjusted, raw: paid, note: n.note, loyalty: o.loyalty });
-        } else {
-          goods += paid;
-          detail.push({
-            name: m.product.name,
-            display: paid,
-            raw: paid,
-            note: o.pack,
-            loyalty: o.loyalty,
-          });
-        }
-      });
-
-      const del = includeDelivery ? deliveryFee(sid, goods) : 0;
-      return {
-        id: sid,
-        store: D.STORES[sid],
-        goods,
-        goodsShelf,
-        loyaltySaving,
-        delivery: del,
-        total: goods + del,
-        detail,
-      };
-    });
-
-    const best = results.reduce((a, b) => (a.total <= b.total ? a : b));
-    const worst = results.reduce((a, b) => (a.total >= b.total ? a : b));
-    const saved = worst.total - best.total;
-
-    const summary = document.getElementById('savings-summary');
-    summary.innerHTML =
-      results
-        .map((r) => {
-          const win = r.id === best.id;
-          return (
-            '<div class="save-card' +
-            (win ? ' winner' : '') +
-            '"><div class="label">' +
-            r.store.name +
-            (win ? ' · best' : '') +
-            '</div><div class="value">' +
-            money(r.total) +
-            '</div><div class="detail">Goods ' +
-            money(r.goods) +
-            (includeDelivery
-              ? ' · Delivery ' + (r.delivery === 0 ? 'free' : money(r.delivery))
-              : '') +
-            (r.loyaltySaving > 0.009
-              ? '<div class="loyalty-note">Loyalty saves ' + money(r.loyaltySaving) + ' vs shelf</div>'
-              : '') +
-            '</div></div>'
-          );
-        })
-        .join('') +
-      '<div class="save-card"><div class="label">You could save</div><div class="value">' +
-      money(saved) +
-      '</div><div class="detail">Choosing ' +
-      best.store.name +
-      ' over ' +
-      worst.store.name +
-      ' on this list' +
-      (normalise ? ' (pack-adjusted)' : '') +
-      '</div></div>';
-
-    const wrap = document.getElementById('savings-table-wrap');
-    const matched = matches.filter((m) => m.product);
-    if (!matched.length) {
-      wrap.innerHTML = '<p class="empty-state">Add a shopping list on the Compare tab first.</p>';
-      return;
-    }
-
-    let body = matched
-      .map((m) => {
-        const cells = STORE_IDS.map((sid) => {
-          const r = results.find((x) => x.id === sid);
-          const line = r.detail.find((d) => d.name === m.product.name);
-          const loyaltyBit =
-            useLoyalty && line.loyalty != null
-              ? '<span class="loyalty-note">Loyalty ' + money(line.loyalty) + '</span>'
-              : '';
-          return (
-            '<td class="price-cell"><span class="amount">' +
-            money(line.display) +
-            '</span><span class="pack">' +
-            escapeHtml(line.note) +
-            '</span>' +
-            loyaltyBit +
-            '</td>'
-          );
-        }).join('');
-        return '<tr class="breakdown-row"><td>' + escapeHtml(m.product.name) + '</td>' + cells + '</tr>';
-      })
-      .join('');
-
-    body +=
-      '<tr><td><strong>Goods subtotal</strong></td>' +
-      results.map((r) => '<td><strong>' + money(r.goods) + '</strong></td>').join('') +
-      '</tr>';
-
-    if (includeDelivery) {
-      body +=
-        '<tr><td>Delivery</td>' +
-        results
-          .map((r) => {
-            const free = r.delivery === 0;
-            return (
-              '<td>' +
-              (free ? '<span class="delta-pos">Free</span>' : money(r.delivery)) +
-              '<span class="pack">Free over ' +
-              money(r.store.delivery.freeOver) +
-              '</span></td>'
-            );
-          })
-          .join('') +
-        '</tr>';
-    }
-
-    body +=
-      '<tr><td><strong>Real total</strong></td>' +
-      results
-        .map((r) => {
-          const win = r.id === best.id;
-          return (
-            '<td class="price-cell' +
-            (win ? ' is-low' : '') +
-            '"><span class="amount">' +
-            money(r.total) +
-            '</span></td>'
-          );
-        })
-        .join('') +
-      '</tr>';
-
-    const cards = matched
-      .map((m) => {
-        const offers = STORE_IDS.map((sid) => {
-          const r = results.find((x) => x.id === sid);
-          const line = r.detail.find((d) => d.name === m.product.name);
-          const store = D.STORES[sid];
-          const win = r.id === best.id;
-          const loyaltyBit =
-            useLoyalty && line.loyalty != null
-              ? '<br><span class="loyalty-note">Loyalty ' + money(line.loyalty) + '</span>'
-              : '';
-          return (
-            '<div class="offer-row' +
-            (win ? ' is-best' : '') +
-            '"><div class="offer-store"><span class="dot" style="background:' +
-            store.colour +
-            '"></span>' +
-            store.short +
-            '</div><div class="offer-price">' +
-            money(line.display) +
-            '</div><div class="offer-meta">' +
-            escapeHtml(line.note) +
-            loyaltyBit +
-            '</div></div>'
-          );
-        }).join('');
-        return (
-          '<article class="item-card"><h3>' +
-          escapeHtml(m.product.name) +
-          '</h3><div class="offer-list">' +
-          offers +
-          '</div></article>'
-        );
-      })
-      .join('');
-
-    const totalsCard =
-      '<article class="item-card totals-card"><h3>Real totals</h3><div class="offer-list">' +
-      results
-        .map((r) => {
-          const win = r.id === best.id;
-          return (
-            '<div class="offer-row' +
-            (win ? ' is-best' : '') +
-            '"><div class="offer-store"><span class="dot" style="background:' +
-            r.store.colour +
-            '"></span>' +
-            r.store.short +
-            (win ? ' · best' : '') +
-            '</div><div class="offer-price">' +
-            money(r.total) +
-            '</div><div class="offer-meta">Goods ' +
-            money(r.goods) +
-            (includeDelivery
-              ? ' · Delivery ' + (r.delivery === 0 ? 'free' : money(r.delivery))
-              : '') +
-            '</div></div>'
-          );
-        })
-        .join('') +
-      '</div></article>';
-
-    wrap.innerHTML =
-      '<div class="mobile-cards">' +
-      totalsCard +
-      cards +
-      '</div><div class="desktop-table"><table class="compare"><thead><tr><th>Item</th><th>Asda</th><th>Tesco</th><th>Morrisons</th></tr></thead><tbody>' +
-      body +
-      '</tbody></table></div>';
-  }
-
-  document.getElementById('btn-savings').addEventListener('click', renderSavings);
+  document.getElementById('plan-single').addEventListener('click', () => {
+    activePlan = 'single';
+    document.getElementById('plan-single').classList.add('is-on');
+    document.getElementById('plan-split').classList.remove('is-on');
+    renderJourney();
+  });
+  document.getElementById('plan-split').addEventListener('click', () => {
+    activePlan = 'split';
+    document.getElementById('plan-split').classList.add('is-on');
+    document.getElementById('plan-single').classList.remove('is-on');
+    renderJourney();
+  });
 
   /* ---------- Boot ---------- */
+  function setModeBadge() {
+    const el = document.getElementById('price-mode');
+    if (!el) return;
+    el.textContent = liveMode ? 'Live prices (Hobnight)' : 'Sample prices';
+    el.classList.toggle('is-live', liveMode);
+  }
+
   listInput.value = D.DEFAULT_LIST.join('\n');
-  renderMealControls();
-  renderCompare(buildMatches(D.DEFAULT_LIST));
+  renderStorePick();
   setModeBadge();
+  goStep(1);
 
   fetch('/api/status')
     .then((r) => (r.ok ? r.json() : null))
@@ -1035,12 +794,6 @@
       if (!status) return;
       liveMode = Boolean(status.live);
       setModeBadge();
-      if (liveMode) {
-        matchHint.textContent = 'Live mode ready — tap Compare prices to fetch Hobnight catalogue prices.';
-      }
     })
-    .catch(() => {
-      liveMode = false;
-      setModeBadge();
-    });
+    .catch(() => {});
 })();

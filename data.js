@@ -46,8 +46,8 @@ window.BasketWiseData = (function () {
       category: 'Bakery',
       query: ['bread', 'loaf', 'white bread'],
       offers: {
-        asda: { price: 0.89, pack: '800g', unit: '£0.11/100g', loyalty: null, updated: '2026-10-15' },
-        tesco: { price: 0.95, pack: '800g', unit: '£0.12/100g', loyalty: 0.75, updated: '2026-10-15' },
+        asda: { price: 0.99, pack: '800g', unit: '£0.12/100g', loyalty: null, updated: '2026-10-15' },
+        tesco: { price: 0.69, pack: '800g', unit: '£0.09/100g', loyalty: 0.55, updated: '2026-10-15' },
         morrisons: { price: 0.92, pack: '800g', unit: '£0.12/100g', loyalty: null, updated: '2026-10-14' },
       },
     },
@@ -57,9 +57,9 @@ window.BasketWiseData = (function () {
       category: 'Dairy',
       query: ['eggs', 'egg'],
       offers: {
-        asda: { price: 1.89, pack: '6 pack', unit: '£0.32/egg', loyalty: 1.69, updated: '2026-10-14' },
+        asda: { price: 2.05, pack: '6 pack', unit: '£0.34/egg', loyalty: 1.85, updated: '2026-10-14' },
         tesco: { price: 2.10, pack: '6 pack', unit: '£0.35/egg', loyalty: 1.75, updated: '2026-10-15' },
-        morrisons: { price: 1.99, pack: '6 pack', unit: '£0.33/egg', loyalty: 1.79, updated: '2026-10-13' },
+        morrisons: { price: 1.65, pack: '6 pack', unit: '£0.28/egg', loyalty: 1.50, updated: '2026-10-13' },
       },
     },
     {
@@ -68,9 +68,9 @@ window.BasketWiseData = (function () {
       category: 'Meat',
       query: ['chicken', 'chicken breast'],
       offers: {
-        asda: { price: 3.75, pack: '500g', unit: '£7.50/kg', loyalty: null, updated: '2026-10-15' },
+        asda: { price: 3.95, pack: '500g', unit: '£7.90/kg', loyalty: null, updated: '2026-10-15' },
         tesco: { price: 4.00, pack: '470g', unit: '£8.51/kg', loyalty: 3.50, updated: '2026-10-15' },
-        morrisons: { price: 3.85, pack: '500g', unit: '£7.70/kg', loyalty: 3.50, updated: '2026-10-14' },
+        morrisons: { price: 3.45, pack: '500g', unit: '£6.90/kg', loyalty: 3.20, updated: '2026-10-14' },
       },
     },
     {
@@ -90,8 +90,8 @@ window.BasketWiseData = (function () {
       category: 'Cupboard',
       query: ['pasta', 'penne'],
       offers: {
-        asda: { price: 0.75, pack: '500g', unit: '£1.50/kg', loyalty: null, updated: '2026-10-12' },
-        tesco: { price: 0.85, pack: '500g', unit: '£1.70/kg', loyalty: 0.65, updated: '2026-10-15' },
+        asda: { price: 0.89, pack: '500g', unit: '£1.78/kg', loyalty: null, updated: '2026-10-12' },
+        tesco: { price: 0.55, pack: '500g', unit: '£1.10/kg', loyalty: 0.45, updated: '2026-10-15' },
         morrisons: { price: 0.79, pack: '500g', unit: '£1.58/kg', loyalty: 0.69, updated: '2026-10-14' },
       },
     },
