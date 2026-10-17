@@ -293,6 +293,61 @@ window.BasketWiseData = (function () {
         morrisons: { price: 5.75, pack: '260g (2)', unit: '£22.12/kg', loyalty: 5.00, updated: '2026-10-14' },
       },
     },
+    {
+      id: 'dog-food-dry',
+      name: 'Dry dog food',
+      category: 'Pet',
+      query: ['dog food', 'dogfood', 'dry dog food', 'dog', 'puppy food'],
+      offers: {
+        asda: { price: 8.50, pack: '2.5kg', unit: '£3.40/kg', loyalty: 7.50, updated: '2026-10-15' },
+        tesco: { price: 9.00, pack: '2.5kg', unit: '£3.60/kg', loyalty: 7.75, updated: '2026-10-15' },
+        morrisons: { price: 8.75, pack: '2.5kg', unit: '£3.50/kg', loyalty: 7.90, updated: '2026-10-14' },
+      },
+    },
+    {
+      id: 'dog-food-wet',
+      name: 'Wet dog food trays',
+      category: 'Pet',
+      query: ['wet dog food', 'dog trays', 'dog pouches'],
+      offers: {
+        asda: { price: 4.25, pack: '6 x 100g', unit: '£7.08/kg', loyalty: null, updated: '2026-10-14' },
+        tesco: { price: 4.50, pack: '6 x 100g', unit: '£7.50/kg', loyalty: 3.75, updated: '2026-10-15' },
+        morrisons: { price: 4.35, pack: '6 x 100g', unit: '£7.25/kg', loyalty: 3.90, updated: '2026-10-13' },
+      },
+    },
+    {
+      id: 'cat-food',
+      name: 'Cat food pouches',
+      category: 'Pet',
+      query: ['cat food', 'catfood', 'cat', 'kitten food'],
+      offers: {
+        asda: { price: 3.80, pack: '12 x 85g', unit: '£3.73/kg', loyalty: 3.40, updated: '2026-10-15' },
+        tesco: { price: 4.00, pack: '12 x 85g', unit: '£3.92/kg', loyalty: 3.50, updated: '2026-10-15' },
+        morrisons: { price: 3.90, pack: '12 x 85g', unit: '£3.82/kg', loyalty: null, updated: '2026-10-14' },
+      },
+    },
+    {
+      id: 'washing-up-liquid',
+      name: 'Washing-up liquid',
+      category: 'Household',
+      query: ['washing up', 'washing-up', 'washing up liquid', 'fairy'],
+      offers: {
+        asda: { price: 1.25, pack: '450ml', unit: '£2.78/L', loyalty: null, updated: '2026-10-13' },
+        tesco: { price: 1.40, pack: '433ml', unit: '£3.23/L', loyalty: 1.10, updated: '2026-10-15' },
+        morrisons: { price: 1.30, pack: '450ml', unit: '£2.89/L', loyalty: 1.15, updated: '2026-10-14' },
+      },
+    },
+    {
+      id: 'toilet-roll',
+      name: 'Toilet roll',
+      category: 'Household',
+      query: ['toilet roll', 'toilet paper', 'loo roll'],
+      offers: {
+        asda: { price: 3.95, pack: '9 rolls', unit: '£0.44/roll', loyalty: 3.50, updated: '2026-10-15' },
+        tesco: { price: 4.25, pack: '9 rolls', unit: '£0.47/roll', loyalty: 3.50, updated: '2026-10-15' },
+        morrisons: { price: 4.00, pack: '9 rolls', unit: '£0.44/roll', loyalty: null, updated: '2026-10-14' },
+      },
+    },
   ];
 
   const DEFAULT_LIST = [
