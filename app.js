@@ -1006,6 +1006,30 @@
     }
   });
 
+  /* ---------- Theme (light / dark) ---------- */
+  function currentTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  }
+
+  function applyTheme(theme) {
+    const next = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    try {
+      localStorage.setItem('basketwise-theme', next);
+    } catch (_) {}
+    const btn = document.getElementById('theme-toggle');
+    if (btn) {
+      btn.setAttribute('aria-label', next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      btn.title = next === 'dark' ? 'Dark mode on — tap for light' : 'Light mode on — tap for dark';
+    }
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', next === 'dark' ? '#0F1716' : '#0A5C5A');
+  }
+
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    applyTheme(currentTheme() === 'dark' ? 'light' : 'dark');
+  });
+
   /* ---------- Boot ---------- */
   function setModeBadge() {
     const el = document.getElementById('price-mode');
@@ -1014,6 +1038,7 @@
     el.classList.toggle('is-live', liveMode);
   }
 
+  applyTheme(currentTheme());
   listInput.value = D.DEFAULT_LIST.join('\n');
   renderStorePick();
   setModeBadge();
