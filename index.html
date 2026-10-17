@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>BasketWise — Compare UK supermarket shops &amp; plan your shop</title>
-<meta name="description" content="Enter your shopping list, pick stores, compare Asda, Tesco and Morrisons, then get a simple shopping journey — one cheapest shop or a split across stores.">
+<meta name="description" content="Enter your shopping list, pick stores, compare UK supermarket prices, then get a simple shopping journey at the single cheapest shop.">
 <meta name="theme-color" content="#0A5C5A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -98,29 +98,15 @@
         <button type="button" class="btn ghost" id="btn-cancel-add-store">Cancel</button>
       </div>
 
-      <div class="control-block">
-        <span class="field-label">How should we plan your trip?</span>
-        <div class="choice-stack" role="radiogroup" aria-label="Journey preference">
-          <label class="choice">
-            <input type="radio" name="journey-mode" value="single" checked>
-            <span>
-              <strong>One cheapest shop</strong>
-              <small>Buy everything where the whole basket costs least.</small>
-            </span>
-          </label>
-          <label class="choice">
-            <input type="radio" name="journey-mode" value="split">
-            <span>
-              <strong>Split across stores</strong>
-              <small>Buy each item where it’s cheapest.</small>
-            </span>
-          </label>
+      <div class="control-block plan-note">
+        <span class="field-label">How we plan your trip</span>
+        <div class="choice is-static" aria-label="One cheapest shop">
+          <span class="choice-mark" aria-hidden="true"></span>
+          <span>
+            <strong>One cheapest shop</strong>
+            <small>Buy everything where the whole basket costs least.</small>
+          </span>
         </div>
-      </div>
-
-      <div class="control-block">
-        <label class="field-label" for="postcode">Area (optional)</label>
-        <input type="text" id="postcode" class="text-input" placeholder="e.g. LS1 or M1" maxlength="8" autocomplete="postal-code">
       </div>
 
       <div class="step-actions dual">
@@ -150,13 +136,8 @@
     <section class="step panel" id="step-4" data-step="4" hidden aria-labelledby="step4-title">
       <header class="panel-head">
         <h2 id="step4-title">Your shopping journey</h2>
-        <p>Based on the prices — either one stop at the cheapest total, or a split journey with how much of the basket each store covers.</p>
+        <p>One stop at the supermarket where your whole basket costs least.</p>
       </header>
-
-      <div class="journey-toggle" role="group" aria-label="Switch plan type">
-        <button type="button" class="chip is-on" data-plan="single" id="plan-single">One cheapest shop</button>
-        <button type="button" class="chip" data-plan="split" id="plan-split">Split journey</button>
-      </div>
 
       <div id="journey-out" class="journey-out" aria-live="polite"></div>
 

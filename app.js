@@ -427,17 +427,9 @@
     pinStore(btn.getAttribute('data-add-store'));
   });
 
-  document.querySelectorAll('input[name="journey-mode"]').forEach((r) => {
-    r.addEventListener('change', () => {
-      if (r.checked) journeyPref = r.value;
-    });
-  });
-
   document.getElementById('btn-to-prices').addEventListener('click', async () => {
-    journeyPref = (document.querySelector('input[name="journey-mode"]:checked') || {}).value || 'single';
-    activePlan = journeyPref;
-    document.getElementById('plan-single').classList.toggle('is-on', activePlan === 'single');
-    document.getElementById('plan-split').classList.toggle('is-on', activePlan === 'split');
+    journeyPref = 'single';
+    activePlan = 'single';
     goStep(3);
     await runCompare();
   });
@@ -903,162 +895,53 @@
 
   function renderJourney() {
     const plans = buildPlans(lastMatched);
-    const postcode = (document.getElementById('postcode').value || '').trim().toUpperCase();
-    const areaNote = postcode ? ' near <strong>' + escapeHtml(postcode) + '</strong>' : '';
-
-    if (activePlan === 'single') {
-      const b = plans.bestSingle;
-      if (!b) {
-        lastJourneyStops = [];
-        journeyOut.innerHTML = '<p class="empty-state">No priced items to plan a journey.</p>';
-        return;
-      }
-      rememberStops([b]);
-      const save =
-        plans.worstSingle && plans.worstSingle.id !== b.id
-          ? plans.worstSingle.sum - b.sum
-          : 0;
-      journeyOut.innerHTML =
-        '<div class="journey-hero-card">' +
-        '<p class="journey-kicker">Recommended trip</p>' +
-        '<h3>Shop everything at ' +
-        escapeHtml(b.store.name) +
-        '</h3>' +
-        '<p class="journey-lead">One stop' +
-        areaNote +
-        ' — simplest journey for this list.</p>' +
-        '<div class="journey-stat">' +
-        money(b.sum) +
-        '<span> for ' +
-        b.count +
-        ' items</span></div>' +
-        (save > 0.009
-          ? '<p class="meal-save">Save ' +
-            money(save) +
-            ' vs shopping the whole list at ' +
-            escapeHtml(plans.worstSingle.store.name) +
-            '</p>'
-          : '') +
-        '</div>' +
-        '<div class="journey-stop">' +
-        '<div class="journey-stop-head"><span class="dot" style="background:' +
-        b.storeColour(id) +
-        '"></span><strong>Stop 1 · ' +
-        escapeHtml(b.store.name) +
-        '</strong><span>100% of basket</span></div>' +
-        '<ul class="ing-list">' +
-        b.lines
-          .map(
-            (l) =>
-              '<li><span>' + escapeHtml(l.name) + '</span><span>' + money(l.price) + '</span></li>'
-          )
-          .join('') +
-        '</ul></div>' +
-        '<p class="hint">Prefer splitting for lower item prices? Tap <strong>Split journey</strong> above.</p>';
+    activePlan = 'single';
+    const b = plans.bestSingle;
+    if (!b) {
+      lastJourneyStops = [];
+      journeyOut.innerHTML = '<p class="empty-state">No priced items to plan a journey.</p>';
       return;
     }
-
-    // Split journey
-    const stops = plans.splitStops;
-    if (!stops.length) {
-      journeyOut.innerHTML = '<p class="empty-state">No priced items to split.</p>';
-      return;
-    }
-    const vsSingle =
-      plans.bestSingle && plans.splitTotal < plans.bestSingle.sum
-        ? plans.bestSingle.sum - plans.splitTotal
+    rememberStops([b]);
+    const save =
+      plans.worstSingle && plans.worstSingle.id !== b.id
+        ? plans.worstSingle.sum - b.sum
         : 0;
-
-    const bars = stops
-      .map(
-        (s) =>
-          '<div class="pct-row"><div class="pct-label"><span class="dot" style="background:' +
-          s.storeColour(id) +
-          '"></span>' +
-          escapeHtml(s.store.name) +
-          '</div><div class="pct-track"><i style="width:' +
-          s.pct +
-          '%;background:' +
-          s.storeColour(id) +
-          '"></i></div><div class="pct-val">' +
-          s.pct +
-          '%</div></div>'
-      )
-      .join('');
-
-    const stopCards = stops
-      .map((s, i) => {
-        return (
-          '<div class="journey-stop">' +
-          '<div class="journey-stop-head"><span class="step-num">' +
-          (i + 1) +
-          '</span><span class="dot" style="background:' +
-          s.storeColour(id) +
-          '"></span><strong>' +
-          escapeHtml(s.store.name) +
-          '</strong><span>' +
-          s.pct +
-          '% of spend · ' +
-          s.lines.length +
-          ' items</span></div>' +
-          '<ul class="ing-list">' +
-          s.lines
-            .map(
-              (l) =>
-                '<li><span>' + escapeHtml(l.name) + '</span><span>' + money(l.price) + '</span></li>'
-            )
-            .join('') +
-          '</ul><div class="offer-meta">Subtotal ' +
-          money(s.sum) +
-          '</div></div>'
-        );
-      })
-      .join('');
-
-    const orderText = stops.map((s) => s.store.name + ' (' + s.pct + '%)').join(' → ');
-    rememberStops(stops);
-
     journeyOut.innerHTML =
       '<div class="journey-hero-card">' +
-      '<p class="journey-kicker">Split shopping journey</p>' +
-      '<h3>' +
-      escapeHtml(orderText) +
+      '<p class="journey-kicker">Recommended trip</p>' +
+      '<h3>Shop everything at ' +
+      escapeHtml(b.store.name) +
       '</h3>' +
-      '<p class="journey-lead">Visit order' +
-      areaNote +
-      ' — each item bought where it’s cheapest among your selected stores.</p>' +
+      '<p class="journey-lead">One stop — simplest journey for this list.</p>' +
       '<div class="journey-stat">' +
-      money(plans.splitTotal) +
-      '<span> combined · ' +
-      plans.assigned +
+      money(b.sum) +
+      '<span> for ' +
+      b.count +
       ' items</span></div>' +
-      (vsSingle > 0.009
-        ? '<p class="meal-save">About ' +
-          money(vsSingle) +
-          ' less than buying everything at ' +
-          escapeHtml(plans.bestSingle.store.name) +
+      (save > 0.009
+        ? '<p class="meal-save">Save ' +
+          money(save) +
+          ' vs shopping the whole list at ' +
+          escapeHtml(plans.worstSingle.store.name) +
           '</p>'
-        : '<p class="hint">Split total is similar to the single cheapest shop — one stop may be easier.</p>') +
+        : '') +
       '</div>' +
-      '<div class="pct-block">' +
-      bars +
-      '</div>' +
-      stopCards +
-      '<p class="hint">Want the simplest trip instead? Tap <strong>One cheapest shop</strong>.</p>';
+      '<div class="journey-stop">' +
+      '<div class="journey-stop-head"><span class="dot" style="background:' +
+      storeColour(b.id) +
+      '"></span><strong>Stop 1 · ' +
+      escapeHtml(b.store.name) +
+      '</strong><span>100% of basket</span></div>' +
+      '<ul class="ing-list">' +
+      b.lines
+        .map(
+          (l) =>
+            '<li><span>' + escapeHtml(l.name) + '</span><span>' + money(l.price) + '</span></li>'
+        )
+        .join('') +
+      '</ul></div>';
   }
-
-  document.getElementById('plan-single').addEventListener('click', () => {
-    activePlan = 'single';
-    document.getElementById('plan-single').classList.add('is-on');
-    document.getElementById('plan-split').classList.remove('is-on');
-    renderJourney();
-  });
-  document.getElementById('plan-split').addEventListener('click', () => {
-    activePlan = 'split';
-    document.getElementById('plan-split').classList.add('is-on');
-    document.getElementById('plan-single').classList.remove('is-on');
-    renderJourney();
-  });
 
   document.getElementById('btn-lock-lists').addEventListener('click', async () => {
     const hint = document.getElementById('notify-hint');

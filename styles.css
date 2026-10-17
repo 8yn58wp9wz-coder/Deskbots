@@ -261,7 +261,44 @@ button, textarea, select { font: inherit; color: inherit; }
 .step-actions.dual .btn { width: 100%; min-height: 3rem; }
 
 .store-pick {
-  display: grid; gap: 0.65rem; margin-bottom: 1.25rem;
+  display: grid; gap: 0.85rem; margin-bottom: 1.1rem;
+}
+
+#step-2.step {
+  display: flex;
+  flex-direction: column;
+  gap: 1.85rem;
+  min-height: calc(100vh - 7.5rem);
+}
+#step-2.step[hidden] {
+  display: none !important;
+}
+#step-2 .step-hero {
+  margin-bottom: 0.35rem;
+}
+#step-2 .store-pick {
+  margin-bottom: 0;
+  gap: 1rem;
+}
+#step-2 .store-toggle {
+  padding: 1.15rem 1.1rem;
+}
+#step-2 .btn.add-store {
+  margin: 0;
+}
+#step-2 .add-store-sheet {
+  margin: 0;
+}
+#step-2 .control-block.plan-note {
+  margin: 0.5rem 0 0;
+}
+#step-2 .control-block.plan-note .field-label {
+  display: block;
+  margin-bottom: 0.85rem;
+}
+#step-2 .step-actions {
+  margin-top: auto;
+  padding-top: 1.75rem;
 }
 .store-toggle {
   appearance: none; border: 1.5px solid var(--line); background: var(--surface);
@@ -345,14 +382,34 @@ button, textarea, select { font: inherit; color: inherit; }
 .choice-stack { display: grid; gap: 0.55rem; }
 .choice {
   display: grid; grid-template-columns: auto 1fr; gap: 0.75rem;
-  padding: 0.9rem 1rem; border-radius: 14px; border: 1.5px solid var(--line);
+  padding: 1.15rem 1.1rem; border-radius: 14px; border: 1.5px solid var(--line);
   background: var(--surface); cursor: pointer; align-items: start;
 }
 .choice input { margin-top: 0.3rem; accent-color: var(--teal); width: 1.15rem; height: 1.15rem; }
 .choice strong { display: block; font-family: var(--fh); }
-.choice small { display: block; color: var(--muted); margin-top: 0.2rem; line-height: 1.4; }
+.choice small { display: block; color: var(--muted); margin-top: 0.35rem; line-height: 1.45; }
 .choice:has(input:checked) {
   background: var(--teal-soft); border-color: rgba(10,92,90,0.35);
+}
+.choice.is-static {
+  cursor: default;
+  background: var(--teal-soft);
+  border-color: rgba(10,92,90,0.35);
+}
+.choice-mark {
+  width: 1.15rem; height: 1.15rem; margin-top: 0.2rem; border-radius: 50%;
+  border: 2px solid var(--teal); background: var(--teal);
+  box-shadow: inset 0 0 0 3px var(--surface);
+  flex: none;
+}
+[data-theme="dark"] .choice.is-static {
+  background: rgba(230, 25, 25, 0.12);
+  border-color: rgba(230, 25, 25, 0.45);
+}
+[data-theme="dark"] .choice-mark {
+  border-color: #e61919;
+  background: #e61919;
+  box-shadow: inset 0 0 0 3px #1c1a18;
 }
 
 .text-input {
