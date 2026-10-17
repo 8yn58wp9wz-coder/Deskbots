@@ -23,13 +23,39 @@ Plain HTML, CSS and JavaScript. No build step.
 | `favicon.svg` | Browser tab icon |
 | `netlify.toml` | Publishes the repository root |
 
-## Preview locally
+## Preview locally (sample prices)
 
 ```bash
 python3 -m http.server 8080
 ```
 
+Or with the Node server (needed for live Hobnight prices):
+
+```bash
+node server.mjs
+```
+
 Open `http://localhost:8080`.
+
+## Live prices (Hobnight)
+
+BasketWise can pull live UK catalogue prices for Asda, Tesco and Morrisons via [Hobnight](https://hobnight.com/).
+
+1. Request an API key from Hobnight.
+2. Copy `.env.example` to `.env` and set `HOBNIGHT_API_KEY`, **or** export it in your shell.
+3. Start the proxy server (do not use `python3 -m http.server` for live mode):
+
+```bash
+export HOBNIGHT_API_KEY='1|your-key-here'
+node server.mjs
+```
+
+4. Open the app — the badge should say **Live prices (Hobnight)**.
+5. Enter a list and tap **Compare prices**.
+
+The key stays on the server (`/api/basket` proxy). Never put it in frontend JavaScript.
+
+Without a key, the app keeps using the sample catalogue.
 
 ## Deploy
 

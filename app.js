@@ -14,6 +14,8 @@
   let diet = 'none';
   let dislikes = new Set();
   let lastMatched = [];
+  let liveMode = false;
+  let comparing = false;
 
   /* ---------- Nav / panels ---------- */
   const panels = {
@@ -115,13 +117,23 @@
     let sum = 0;
     let count = 0;
     matches.forEach((m) => {
-      if (!m.product) return;
+      if (!m.product || !m.product.offers) return;
       const o = m.product.offers[storeId];
-      if (!o) return;
+      if (!o || o.price == null) return;
       sum += shelfPrice(o, useLoyalty);
       count += 1;
     });
     return { sum, count };
+  }
+
+  function setModeBadge() {
+    const el = document.getElementById('price-mode');
+    if (!el) return;
+    el.textContent = liveMode ? 'Live prices (Hobnight)' : 'Sample prices';
+    el.classList.toggle('is-live', liveMode);
+    el.title = liveMode
+      ? 'Using Hobnight UK catalogue via the local proxy'
+      : 'Illustrative sample catalogue — set HOBNIGHT_API_KEY to go live';
   }
 
   function renderCompare(matches) {
@@ -130,8 +142,13 @@
     const unmatched = matches.filter((m) => !m.product);
 
     matchHint.textContent = unmatched.length
-      ? matched.length + ' matched · ' + unmatched.length + ' not found in sample catalogue'
-      : matched.length + ' items matched across Asda, Tesco and Morrisons';
+      ? matched.length +
+        ' matched · ' +
+        unmatched.length +
+        (liveMode ? ' not found in live catalogue' : ' not found in sample catalogue')
+      : matched.length +
+        ' items matched across Asda, Tesco and Morrisons' +
+        (liveMode ? ' (live)' : '');
 
     if (!matches.length) {
       storeTotals.innerHTML = '';
@@ -175,13 +192,16 @@
           return (
             '<tr><td>' +
             escapeHtml(m.line) +
-            '</td><td colspan="3" class="unmatched">No match in sample catalogue — try a simpler name</td></tr>'
+            '</td><td colspan="3" class="unmatched">No match — try a simpler name</td></tr>'
           );
         }
-        const prices = STORE_IDS.map((id) => m.product.offers[id].price);
-        const low = Math.min(...prices);
+        const priced = STORE_IDS.map((id) => m.product.offers[id]).filter((o) => o && o.price != null);
+        const low = priced.length ? Math.min(...priced.map((o) => o.price)) : null;
         const cells = STORE_IDS.map((id) => {
           const o = m.product.offers[id];
+          if (!o || o.price == null) {
+            return '<td class="price-cell"><span class="pack">No price</span></td>';
+          }
           const lowClass = o.price === low ? ' is-low' : '';
           return (
             '<td class="price-cell' +
@@ -191,8 +211,7 @@
             '</span>' +
             '<span class="pack">' +
             escapeHtml(o.pack) +
-            ' · ' +
-            escapeHtml(o.unit) +
+            (o.unit ? ' · ' + escapeHtml(o.unit) : '') +
             '</span>' +
             '<span class="updated">Updated ' +
             fmtDate(o.updated) +
@@ -217,14 +236,25 @@
           return (
             '<article class="item-card"><h3>' +
             escapeHtml(m.line) +
-            '</h3><p class="unmatched">No match in sample catalogue</p></article>'
+            '</h3><p class="unmatched">No match' +
+            (liveMode ? ' in live catalogue' : ' in sample catalogue') +
+            '</p></article>'
           );
         }
-        const prices = STORE_IDS.map((id) => m.product.offers[id].price);
-        const low = Math.min(...prices);
+        const priced = STORE_IDS.map((id) => m.product.offers[id]).filter((o) => o && o.price != null);
+        const low = priced.length ? Math.min(...priced.map((o) => o.price)) : null;
         const offers = STORE_IDS.map((id) => {
           const o = m.product.offers[id];
           const store = D.STORES[id];
+          if (!o || o.price == null) {
+            return (
+              '<div class="offer-row"><div class="offer-store"><span class="dot" style="background:' +
+              store.colour +
+              '"></span>' +
+              store.short +
+              '</div><div class="offer-price">—</div><div class="offer-meta">No price</div></div>'
+            );
+          }
           const best = o.price === low;
           return (
             '<div class="offer-row' +
@@ -238,8 +268,7 @@
             money(o.price) +
             '</div><div class="offer-meta">' +
             escapeHtml(o.pack) +
-            ' · ' +
-            escapeHtml(o.unit) +
+            (o.unit ? ' · ' + escapeHtml(o.unit) : '') +
             '<br>Updated ' +
             fmtDate(o.updated) +
             '</div></div>'
@@ -275,12 +304,60 @@
 
   document.getElementById('btn-sample').addEventListener('click', () => {
     listInput.value = D.DEFAULT_LIST.join('\n');
-    renderCompare(buildMatches(D.DEFAULT_LIST));
+    if (liveMode) runCompare();
+    else renderCompare(buildMatches(D.DEFAULT_LIST));
   });
 
-  document.getElementById('btn-compare').addEventListener('click', () => {
+  async function runCompare() {
     const lines = parseList(listInput.value);
-    renderCompare(buildMatches(lines));
+    const btn = document.getElementById('btn-compare');
+    if (!lines.length) {
+      renderCompare([]);
+      return;
+    }
+    if (!liveMode) {
+      renderCompare(buildMatches(lines));
+      return;
+    }
+    if (comparing) return;
+    comparing = true;
+    btn.disabled = true;
+    btn.textContent = 'Fetching live prices…';
+    matchHint.textContent = 'Talking to Hobnight…';
+    try {
+      const res = await fetch('/api/basket', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: lines }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Live compare failed');
+      const matches = (data.results || []).map((r) => ({
+        line: r.line,
+        product: r.product
+          ? {
+              ...r.product,
+              offers: {
+                asda: r.product.offers?.asda || null,
+                tesco: r.product.offers?.tesco || null,
+                morrisons: r.product.offers?.morrisons || null,
+              },
+            }
+          : null,
+      }));
+      renderCompare(matches);
+    } catch (err) {
+      matchHint.textContent = 'Live compare failed: ' + (err.message || 'error') + ' — falling back to sample.';
+      renderCompare(buildMatches(lines));
+    } finally {
+      comparing = false;
+      btn.disabled = false;
+      btn.textContent = 'Compare prices';
+    }
+  }
+
+  document.getElementById('btn-compare').addEventListener('click', () => {
+    runCompare();
   });
 
   /* ---------- Feature 2: Meals ---------- */
@@ -488,11 +565,15 @@
   /** Relative cost index vs median pack among stores — higher pack = lower unit index */
   function normalisedLineCost(product, storeId, useLoyalty) {
     const offer = product.offers[storeId];
+    if (!offer || offer.price == null) return { price: 0, adjusted: 0, note: '—' };
     const price = shelfPrice(offer, useLoyalty);
     const grams = packGrams(offer.pack);
     if (!grams) return { price, adjusted: price, note: offer.pack };
 
-    const packs = STORE_IDS.map((id) => packGrams(product.offers[id].pack)).filter(Boolean);
+    const packs = STORE_IDS.map((id) => {
+      const o = product.offers[id];
+      return o ? packGrams(o.pack) : null;
+    }).filter(Boolean);
     const ref = packs.reduce((a, b) => a + b, 0) / packs.length;
     const adjusted = price * (ref / grams);
     return {
@@ -526,8 +607,9 @@
       const detail = [];
 
       matches.forEach((m) => {
-        if (!m.product) return;
+        if (!m.product || !m.product.offers) return;
         const o = m.product.offers[sid];
+        if (!o || o.price == null) return;
         const shelf = o.price;
         const paid = shelfPrice(o, useLoyalty);
         goodsShelf += shelf;
@@ -747,4 +829,20 @@
   listInput.value = D.DEFAULT_LIST.join('\n');
   renderMealControls();
   renderCompare(buildMatches(D.DEFAULT_LIST));
+  setModeBadge();
+
+  fetch('/api/status')
+    .then((r) => (r.ok ? r.json() : null))
+    .then((status) => {
+      if (!status) return;
+      liveMode = Boolean(status.live);
+      setModeBadge();
+      if (liveMode) {
+        matchHint.textContent = 'Live mode ready — tap Compare prices to fetch Hobnight catalogue prices.';
+      }
+    })
+    .catch(() => {
+      liveMode = false;
+      setModeBadge();
+    });
 })();

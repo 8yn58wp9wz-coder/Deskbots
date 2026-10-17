@@ -234,14 +234,28 @@ button, textarea, select { font: inherit; color: inherit; }
   to { opacity: 1; transform: translateY(0); }
 }
 .panel-head { margin-bottom: 1.5rem; max-width: 46rem; }
+.panel-title-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem 0.75rem;
+  margin-bottom: 0.5rem;
+}
 .panel-head h2 {
-  margin: 0 0 0.5rem;
+  margin: 0;
   font-family: var(--fh);
   font-size: clamp(1.45rem, 2.5vw, 1.85rem);
   letter-spacing: -0.02em;
   color: var(--teal-deep);
 }
+.mode-badge {
+  font-family: var(--fh); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 0.28rem 0.55rem; border-radius: 8px;
+  background: #efe8d6; color: var(--teal-deep);
+}
+.mode-badge.is-live {
+  background: #d8f0c8; color: #2f5a12;
+}
 .panel-head p { margin: 0; color: var(--muted); }
+#btn-compare:disabled { opacity: 0.7; cursor: wait; }
 
 .field-label {
   display: block;
