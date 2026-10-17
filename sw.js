@@ -1,5 +1,5 @@
 /* BasketWise service worker — lock-screen store list notifications */
-const CACHE = 'basketwise-v1';
+const CACHE = 'basketwise-v2';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './data.js', './favicon.svg', './manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {
