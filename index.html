@@ -11,6 +11,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="format-detection" content="telephone=no">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Sora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -142,6 +144,16 @@
       </div>
 
       <div id="journey-out" class="journey-out" aria-live="polite"></div>
+
+      <div class="notify-panel" id="notify-panel">
+        <h3 class="notify-title">Lock-screen store lists</h3>
+        <p class="hint">Inspired by apps like There — pin each shop’s item list as a phone notification so it can show on your lock screen while you shop.</p>
+        <div class="notify-actions">
+          <button type="button" class="btn primary" id="btn-lock-lists">Send lists to lock screen</button>
+          <button type="button" class="btn ghost" id="btn-near-watch" aria-pressed="false">Notify when near a shop</button>
+        </div>
+        <p class="hint" id="notify-hint">On iPhone: Add BasketWise to your Home Screen, then allow notifications for best results.</p>
+      </div>
 
       <div class="step-actions dual">
         <button type="button" class="btn ghost" data-go-step="3">Back</button>

@@ -260,6 +260,34 @@ button, textarea, select { font: inherit; color: inherit; }
 .pct-track i { display: block; height: 100%; border-radius: inherit; }
 .pct-val { font-family: var(--fh); font-weight: 700; font-size: 0.85rem; text-align: right; }
 
+.notify-panel {
+  margin-top: 1.25rem;
+  padding: 1.1rem 1.15rem;
+  border-radius: 16px;
+  border: 1.5px dashed rgba(10, 92, 90, 0.28);
+  background: linear-gradient(165deg, #fff 0%, #f3faf7 100%);
+}
+.notify-title {
+  margin: 0 0 0.35rem;
+  font-family: var(--fh);
+  font-size: 1.05rem;
+  color: var(--teal-deep);
+}
+.notify-actions {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0.85rem 0 0.5rem;
+}
+.notify-actions .btn { width: 100%; min-height: 3rem; }
+#btn-near-watch.is-on {
+  background: var(--teal);
+  color: #fff;
+  box-shadow: none;
+}
+@media (min-width: 700px) {
+  .notify-actions { grid-template-columns: 1fr 1fr; }
+}
+
 /* ---------- Buttons ---------- */
 .btn {
   appearance: none; border: 0; cursor: pointer;

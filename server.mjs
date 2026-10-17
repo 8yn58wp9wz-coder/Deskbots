@@ -28,6 +28,7 @@ const MIME = {
   '.png': 'image/png',
   '.webp': 'image/webp',
   '.ico': 'image/x-icon',
+  '.webmanifest': 'application/manifest+json',
 };
 
 function send(res, status, body, headers = {}) {

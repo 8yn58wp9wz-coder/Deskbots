@@ -1,0 +1,19 @@
+{
+  "name": "BasketWise",
+  "short_name": "BasketWise",
+  "description": "Compare UK supermarket shops and plan your shopping journey.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EAF6F3",
+  "theme_color": "#0A5C5A",
+  "lang": "en-GB",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -22,8 +22,12 @@
   let journeyPref = 'single'; // from step 2 radios
   let activePlan = 'single'; // step 4 toggle
   let lastMatched = [];
+  let lastJourneyStops = []; // [{id, store, lines, sum, pct?}]
   let liveMode = false;
   let comparing = false;
+  let nearWatchId = null;
+  let nearNotified = new Set();
+  let swReg = null;
 
   const listInput = document.getElementById('list-input');
   const matchHint = document.getElementById('match-hint');
@@ -619,6 +623,195 @@
     return { bestSingle, singles, splitStops, splitTotal, worstSingle, assigned };
   }
 
+  function rememberStops(stops) {
+    lastJourneyStops = (stops || []).map((s) => ({
+      id: s.id,
+      name: s.store.name,
+      colour: s.store.colour,
+      sum: s.sum,
+      pct: s.pct,
+      items: (s.lines || []).map((l) => l.name),
+      lines: s.lines || [],
+      store: s.store,
+    }));
+    try {
+      localStorage.setItem('basketwise-journey-stops', JSON.stringify(lastJourneyStops));
+    } catch (_) {}
+  }
+
+  function formatNotifyBody(items) {
+    const list = items || [];
+    if (!list.length) return 'No items for this stop.';
+    const joined = list.join(', ');
+    return joined.length > 180 ? joined.slice(0, 177) + '…' : joined;
+  }
+
+  async function ensureSw() {
+    if (!('serviceWorker' in navigator)) return null;
+    if (swReg) return swReg;
+    swReg = await navigator.serviceWorker.register('./sw.js');
+    await navigator.serviceWorker.ready;
+    return swReg;
+  }
+
+  async function ensureNotifyPermission() {
+    if (!('Notification' in window)) {
+      throw new Error('Notifications aren’t supported in this browser.');
+    }
+    if (Notification.permission === 'granted') return true;
+    if (Notification.permission === 'denied') {
+      throw new Error('Notifications are blocked. Enable them in phone settings.');
+    }
+    const res = await Notification.requestPermission();
+    return res === 'granted';
+  }
+
+  async function sendStoreListNotifications(stops) {
+    const list = stops && stops.length ? stops : lastJourneyStops;
+    if (!list.length) throw new Error('Plan a journey first.');
+    await ensureNotifyPermission();
+    const reg = await ensureSw();
+
+    for (let i = 0; i < list.length; i++) {
+      const s = list[i];
+      const title = 'BasketWise · ' + s.name + (list.length > 1 ? ' (' + (i + 1) + '/' + list.length + ')' : '');
+      const body = formatNotifyBody(s.items || (s.lines || []).map((l) => l.name));
+      const tag = 'basketwise-store-' + s.id;
+      const payload = {
+        type: 'notify-store-list',
+        title,
+        body,
+        tag,
+        storeId: s.id,
+      };
+      if (reg && reg.active) {
+        reg.active.postMessage(payload);
+      } else if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage(payload);
+      } else {
+        // Fallback without SW
+        new Notification(title, {
+          body,
+          tag,
+          requireInteraction: true,
+          icon: './favicon.svg',
+        });
+      }
+      // Small stagger so lock screen shows them as a stack
+      await new Promise((r) => setTimeout(r, 350));
+    }
+  }
+
+  function stopNearWatch() {
+    if (nearWatchId != null && navigator.geolocation) {
+      navigator.geolocation.clearWatch(nearWatchId);
+    }
+    nearWatchId = null;
+    nearNotified = new Set();
+    const btn = document.getElementById('btn-near-watch');
+    if (btn) {
+      btn.classList.remove('is-on');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.textContent = 'Notify when near a shop';
+    }
+  }
+
+  function haversineMetres(a, b) {
+    const R = 6371000;
+    const toRad = (d) => (d * Math.PI) / 180;
+    const dLat = toRad(b.lat - a.lat);
+    const dLon = toRad(b.lon - a.lon);
+    const lat1 = toRad(a.lat);
+    const lat2 = toRad(b.lat);
+    const h =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+
+  async function findNearbyStore(lat, lon, storeName) {
+    const url =
+      'https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=gb&q=' +
+      encodeURIComponent(storeName + ' supermarket') +
+      '&viewbox=' +
+      (lon - 0.08) +
+      ',' +
+      (lat + 0.08) +
+      ',' +
+      (lon + 0.08) +
+      ',' +
+      (lat - 0.08) +
+      '&bounded=1';
+    const res = await fetch(url, {
+      headers: { Accept: 'application/json' },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || !data[0]) return null;
+    return { lat: Number(data[0].lat), lon: Number(data[0].lon), label: data[0].display_name };
+  }
+
+  async function startNearWatch() {
+    if (!navigator.geolocation) throw new Error('Location isn’t available on this device.');
+    if (!lastJourneyStops.length) throw new Error('Plan a journey first.');
+    await ensureNotifyPermission();
+    await ensureSw();
+
+    const hint = document.getElementById('notify-hint');
+    hint.textContent = 'Finding nearby shops from your location…';
+
+    // Resolve approximate shop positions once
+    const here = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 12000,
+      });
+    });
+    const origin = { lat: here.coords.latitude, lon: here.coords.longitude };
+    const targets = [];
+    for (const stop of lastJourneyStops) {
+      try {
+        const found = await findNearbyStore(origin.lat, origin.lon, stop.name);
+        if (found) targets.push({ stop, loc: found });
+        await new Promise((r) => setTimeout(r, 1100)); // be kind to Nominatim
+      } catch (_) {}
+    }
+    if (!targets.length) {
+      throw new Error('Couldn’t find those shops nearby. Try sending lists to the lock screen instead.');
+    }
+
+    hint.textContent =
+      'Watching for ' +
+      targets.map((t) => t.stop.name).join(', ') +
+      '. Keep the page open (or installed) while you travel.';
+
+    const btn = document.getElementById('btn-near-watch');
+    btn.classList.add('is-on');
+    btn.setAttribute('aria-pressed', 'true');
+    btn.textContent = 'Stop near-shop alerts';
+
+    nearNotified = new Set();
+    nearWatchId = navigator.geolocation.watchPosition(
+      async (pos) => {
+        const me = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        for (const t of targets) {
+          const dist = haversineMetres(me, t.loc);
+          if (dist <= 250 && !nearNotified.has(t.stop.id)) {
+            nearNotified.add(t.stop.id);
+            await sendStoreListNotifications([t.stop]);
+            hint.textContent =
+              'You’re near ' + t.stop.name + ' (~' + Math.round(dist) + 'm) — list sent to your lock screen.';
+          }
+        }
+      },
+      (err) => {
+        hint.textContent = 'Location error: ' + (err.message || 'permission denied');
+        stopNearWatch();
+      },
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
+    );
+  }
+
   function renderJourney() {
     const plans = buildPlans(lastMatched);
     const postcode = (document.getElementById('postcode').value || '').trim().toUpperCase();
@@ -627,9 +820,11 @@
     if (activePlan === 'single') {
       const b = plans.bestSingle;
       if (!b) {
+        lastJourneyStops = [];
         journeyOut.innerHTML = '<p class="empty-state">No priced items to plan a journey.</p>';
         return;
       }
+      rememberStops([b]);
       const save =
         plans.worstSingle && plans.worstSingle.id !== b.id
           ? plans.worstSingle.sum - b.sum
@@ -732,6 +927,7 @@
       .join('');
 
     const orderText = stops.map((s) => s.store.name + ' (' + s.pct + '%)').join(' → ');
+    rememberStops(stops);
 
     journeyOut.innerHTML =
       '<div class="journey-hero-card">' +
@@ -775,6 +971,41 @@
     renderJourney();
   });
 
+  document.getElementById('btn-lock-lists').addEventListener('click', async () => {
+    const hint = document.getElementById('notify-hint');
+    const btn = document.getElementById('btn-lock-lists');
+    btn.disabled = true;
+    try {
+      if (!lastJourneyStops.length) throw new Error('Open a journey plan first.');
+      await sendStoreListNotifications(lastJourneyStops);
+      hint.textContent =
+        'Sent ' +
+        lastJourneyStops.length +
+        ' store list' +
+        (lastJourneyStops.length === 1 ? '' : 's') +
+        ' — check your lock screen / notification shade.';
+    } catch (err) {
+      hint.textContent = err.message || 'Could not send notifications.';
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('btn-near-watch').addEventListener('click', async () => {
+    const hint = document.getElementById('notify-hint');
+    if (nearWatchId != null) {
+      stopNearWatch();
+      hint.textContent = 'Near-shop alerts stopped.';
+      return;
+    }
+    try {
+      await startNearWatch();
+    } catch (err) {
+      stopNearWatch();
+      hint.textContent = err.message || 'Could not start near-shop alerts.';
+    }
+  });
+
   /* ---------- Boot ---------- */
   function setModeBadge() {
     const el = document.getElementById('price-mode');
@@ -787,6 +1018,19 @@
   renderStorePick();
   setModeBadge();
   goStep(1);
+
+  if ('serviceWorker' in navigator) {
+    ensureSw().catch(() => {});
+  }
+
+  const params = new URLSearchParams(location.search);
+  if (params.get('step') === '4') {
+    // deep link from notification
+    try {
+      const saved = JSON.parse(localStorage.getItem('basketwise-journey-stops') || '[]');
+      if (saved.length) lastJourneyStops = saved;
+    } catch (_) {}
+  }
 
   fetch('/api/status')
     .then((r) => (r.ok ? r.json() : null))
