@@ -1027,10 +1027,12 @@
       localStorage.setItem('basketwise-theme', next);
     } catch (_) {}
     const btn = document.getElementById('theme-toggle');
+    const label = document.getElementById('theme-label');
     if (btn) {
       btn.setAttribute('aria-label', next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
       btn.title = next === 'dark' ? 'Dark mode on — tap for light' : 'Light mode on — tap for dark';
     }
+    if (label) label.textContent = next === 'dark' ? 'Light' : 'Dark';
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', next === 'dark' ? '#121110' : '#0A5C5A');
     // Refresh coloured dots if store pick / results are on screen

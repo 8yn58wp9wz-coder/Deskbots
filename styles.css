@@ -115,16 +115,24 @@ button, textarea, select { font: inherit; color: inherit; }
 }
 .theme-toggle {
   appearance: none; border: 1.5px solid var(--line); background: var(--surface);
-  color: var(--brand-text); width: 2.6rem; height: 2.6rem; border-radius: 12px;
-  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--brand-text); min-height: 2.75rem; padding: 0 0.75rem 0 0.65rem;
+  border-radius: 12px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;
   cursor: pointer; flex: none;
+  font-family: var(--fh); font-size: 0.78rem; font-weight: 700;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.2s, border-color 0.2s;
 }
 .theme-toggle:hover { background: var(--teal-soft); }
 .theme-toggle .theme-icon { display: none; }
+.theme-label { letter-spacing: 0.02em; }
 [data-theme="light"] .theme-toggle .theme-icon-moon { display: flex; }
 [data-theme="dark"] .theme-toggle .theme-icon-sun { display: flex; }
+[data-theme="dark"] .theme-toggle {
+  border-color: rgba(255,255,255,0.18);
+  background: #2c2825;
+  color: #f3f1ef;
+}
 
 [data-theme="dark"] body {
   background: var(--paper);
