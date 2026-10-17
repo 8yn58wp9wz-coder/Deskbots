@@ -137,13 +137,14 @@ button, textarea, select { font: inherit; color: inherit; }
   display: grid;
   align-items: end;
   overflow: hidden;
+  background: linear-gradient(180deg, #9ed9d2 0%, #c8ebe6 45%, #eaf6f3 100%);
 }
 .hero-visual {
   position: absolute; inset: 0; z-index: 0;
 }
 .hero-wash {
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 35%, rgba(251, 250, 246, 0.55) 70%, var(--paper) 100%);
+  background: linear-gradient(180deg, rgba(234, 246, 243, 0.72) 0%, rgba(234, 246, 243, 0.35) 42%, transparent 70%);
   z-index: 1; pointer-events: none;
 }
 .hero-scene {
@@ -486,17 +487,49 @@ table.compare tr:hover td { background: rgba(232, 246, 244, 0.45); }
   .hero {
     min-height: auto;
     max-height: none;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background: linear-gradient(180deg, #b8e4de 0%, #eaf6f3 55%, var(--paper) 100%);
   }
+  /* Text first, basket below — no overlap on phones */
   .hero-copy {
+    position: relative;
+    z-index: 2;
+    order: 1;
     max-width: none;
-    padding: 3.6rem 0 1.75rem;
+    padding: 1.75rem 0 1.25rem;
+    background: transparent;
+  }
+  .hero-visual {
+    position: relative;
+    inset: auto;
+    order: 2;
+    height: min(42vw, 220px);
+    min-height: 180px;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .hero-wash {
+    display: none;
+  }
+  .hero-scene {
+    width: 160%;
+    max-width: none;
+    height: 160%;
+    margin: -8% 0 0 -30%;
+    object-fit: cover;
   }
   .brand-hero { font-size: clamp(2.35rem, 11vw, 3.2rem); }
   .hero h1 {
     max-width: none;
     font-size: clamp(1.2rem, 4.8vw, 1.45rem);
   }
-  .hero-lead { font-size: 0.98rem; margin-bottom: 1.2rem; }
+  .hero-lead {
+    font-size: 0.98rem;
+    margin-bottom: 1.2rem;
+    max-width: none;
+  }
   .hero-cta { flex-direction: column; }
   .hero-cta .btn { width: 100%; min-height: 3rem; }
 
