@@ -319,6 +319,9 @@ button, textarea, select { font: inherit; color: inherit; }
   display: grid;
   gap: 0.75rem;
 }
+.add-store-sheet[hidden] {
+  display: none !important;
+}
 .add-store-sheet .field-label { margin: 0; }
 .add-store-options { display: grid; gap: 0.55rem; }
 .add-store-options .store-toggle.add-option .store-toggle-state {

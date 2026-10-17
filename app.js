@@ -399,6 +399,7 @@
     selectedStores.add(id);
     closeAddStoreSheet();
     renderStorePick();
+    renderAddStoreOptions();
   }
 
   document.getElementById('store-pick').addEventListener('click', (e) => {
