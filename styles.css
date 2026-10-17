@@ -278,6 +278,67 @@ button, textarea, select { font: inherit; color: inherit; }
 }
 .store-toggle.is-on .store-toggle-state { color: var(--teal-deep); font-weight: 600; }
 
+.btn.add-store {
+  width: 100%;
+  margin: -0.35rem 0 1.35rem;
+  min-height: 2.85rem;
+  border-style: dashed;
+  border-color: var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--fh);
+  font-weight: 600;
+  gap: 0.45rem;
+}
+.btn.add-store span[aria-hidden] {
+  font-size: 1.25rem;
+  line-height: 1;
+  font-weight: 400;
+}
+.btn.add-store:hover {
+  border-color: var(--teal);
+  color: var(--teal-deep);
+  background: var(--teal-soft);
+}
+[data-theme="dark"] .btn.add-store {
+  border-color: rgba(255,255,255,0.22);
+  color: #c8c2bc;
+}
+[data-theme="dark"] .btn.add-store:hover {
+  border-color: rgba(230, 25, 25, 0.55);
+  color: #f3f1ef;
+  background: rgba(230, 25, 25, 0.12);
+}
+
+.add-store-sheet {
+  margin: -0.75rem 0 1.35rem;
+  padding: 1rem;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--soft-card, var(--teal-soft));
+  display: grid;
+  gap: 0.75rem;
+}
+.add-store-sheet .field-label { margin: 0; }
+.add-store-options { display: grid; gap: 0.55rem; }
+.add-store-options .store-toggle.add-option .store-toggle-state {
+  color: var(--teal-deep);
+  font-weight: 600;
+}
+[data-theme="dark"] .add-store-sheet {
+  background: #1c1a18;
+  border-color: rgba(255,255,255,0.14);
+}
+[data-theme="dark"] .add-store-options .store-toggle.add-option .store-toggle-state {
+  color: #e61919;
+}
+
+.step-hero .brand-hero.section-title {
+  text-align: center;
+  width: 100%;
+  letter-spacing: 0.08em;
+}
+
 .choice-stack { display: grid; gap: 0.55rem; }
 .choice {
   display: grid; grid-template-columns: auto 1fr; gap: 0.75rem;

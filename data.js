@@ -25,6 +25,53 @@ window.BasketWiseData = (function () {
       loyalty: 'Morrisons More',
       delivery: { name: 'Morrisons Delivery', fee: 3.75, freeOver: 40 },
     },
+    sainsburys: {
+      id: 'sainsburys',
+      name: "Sainsbury's",
+      short: "Sainsbury's",
+      colour: '#f67828',
+      loyalty: 'Nectar',
+      delivery: { name: "Sainsbury's Delivery", fee: 4.0, freeOver: 40 },
+      extra: true,
+    },
+    waitrose: {
+      id: 'waitrose',
+      name: 'Waitrose',
+      short: 'Waitrose',
+      colour: '#78be20',
+      loyalty: 'myWaitrose',
+      delivery: { name: 'Waitrose Delivery', fee: 6.0, freeOver: 60 },
+      extra: true,
+    },
+    iceland: {
+      id: 'iceland',
+      name: 'Iceland',
+      short: 'Iceland',
+      colour: '#e30613',
+      loyalty: 'Bonus Card',
+      delivery: { name: 'Iceland Delivery', fee: 3.0, freeOver: 35 },
+      extra: true,
+    },
+    ocado: {
+      id: 'ocado',
+      name: 'Ocado',
+      short: 'Ocado',
+      colour: '#6d1f7a',
+      loyalty: null,
+      delivery: { name: 'Ocado Delivery', fee: 2.99, freeOver: 40 },
+      extra: true,
+    },
+  };
+
+  const DEFAULT_STORE_IDS = ['asda', 'tesco', 'morrisons'];
+  const EXTRA_STORE_IDS = Object.keys(STORES).filter((id) => STORES[id].extra);
+
+  /* Relative sample price factors for optional stores (illustrative, not live) */
+  const EXTRA_PRICE_FACTOR = {
+    sainsburys: 1.06,
+    waitrose: 1.22,
+    iceland: 0.94,
+    ocado: 1.12,
   };
 
   /* Each product: store offers with price, pack, unit, loyalty price optional, lastUpdated */
@@ -516,5 +563,37 @@ window.BasketWiseData = (function () {
     },
   ];
 
-  return { STORES, PRODUCTS, DEFAULT_LIST, DIETS, DISLIKES, MEALS };
+  /* Seed sample offers for optional stores from the three core prices */
+  PRODUCTS.forEach((p) => {
+    const core = DEFAULT_STORE_IDS.map((id) => p.offers[id]).filter(Boolean);
+    if (!core.length) return;
+    const avg =
+      core.reduce((sum, o) => sum + o.price, 0) / core.length;
+    const pack = core[0].pack;
+    const unit = core[0].unit;
+    EXTRA_STORE_IDS.forEach((id) => {
+      if (p.offers[id]) return;
+      const factor = EXTRA_PRICE_FACTOR[id] || 1.05;
+      const price = Math.round(avg * factor * 100) / 100;
+      p.offers[id] = {
+        price,
+        pack,
+        unit,
+        loyalty: null,
+        updated: '2026-10-15',
+        sample: true,
+      };
+    });
+  });
+
+  return {
+    STORES,
+    PRODUCTS,
+    DEFAULT_LIST,
+    DIETS,
+    DISLIKES,
+    MEALS,
+    DEFAULT_STORE_IDS,
+    EXTRA_STORE_IDS,
+  };
 })();

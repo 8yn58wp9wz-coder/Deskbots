@@ -2,12 +2,17 @@
   const D = window.BasketWiseData;
   if (!D) return;
 
-  const ALL_STORES = ['asda', 'tesco', 'morrisons'];
+  const DEFAULT_STORES = D.DEFAULT_STORE_IDS || ['asda', 'tesco', 'morrisons'];
+  const EXTRA_STORES = D.EXTRA_STORE_IDS || [];
   /* Softer store dots in There-inspired dark mode */
   const DARK_STORE_COLOURS = {
     asda: '#b08cd9',
     tesco: '#7eb8e8',
     morrisons: '#cf9f7b',
+    sainsburys: '#f0a066',
+    waitrose: '#9fd45a',
+    iceland: '#f07178',
+    ocado: '#c48ad4',
   };
   const money = (n) => '£' + (Math.round(n * 100) / 100).toFixed(2);
   function currentTheme() {
@@ -31,7 +36,8 @@
 
   /* ---------- State ---------- */
   let step = 1;
-  let selectedStores = new Set(ALL_STORES);
+  let pinnedStores = DEFAULT_STORES.slice();
+  let selectedStores = new Set(DEFAULT_STORES);
   let journeyPref = 'single'; // from step 2 radios
   let activePlan = 'single'; // step 4 toggle
   let lastMatched = [];
@@ -100,7 +106,11 @@
   }
 
   function activeStoreIds() {
-    return ALL_STORES.filter((id) => selectedStores.has(id));
+    return pinnedStores.filter((id) => selectedStores.has(id));
+  }
+
+  function availableExtraStores() {
+    return EXTRA_STORES.filter((id) => !pinnedStores.includes(id));
   }
 
   /* ---------- Step navigation ---------- */
@@ -314,25 +324,81 @@
   /* ---------- Step 2: stores ---------- */
   function renderStorePick() {
     const wrap = document.getElementById('store-pick');
-    wrap.innerHTML = ALL_STORES.map((id) => {
-      const s = D.STORES[id];
-      const on = selectedStores.has(id);
-      return (
-        '<button type="button" class="store-toggle' +
-        (on ? ' is-on' : '') +
-        '" data-store="' +
-        id +
-        '" aria-pressed="' +
-        on +
-        '"><span class="dot" style="background:' +
-        storeColour(id) +
-        '"></span><span class="store-toggle-name">' +
-        s.name +
-        '</span><span class="store-toggle-state">' +
-        (on ? 'Included' : 'Off') +
-        '</span></button>'
-      );
-    }).join('');
+    wrap.innerHTML = pinnedStores
+      .map((id) => {
+        const s = D.STORES[id];
+        if (!s) return '';
+        const on = selectedStores.has(id);
+        return (
+          '<button type="button" class="store-toggle' +
+          (on ? ' is-on' : '') +
+          '" data-store="' +
+          id +
+          '" aria-pressed="' +
+          on +
+          '"><span class="dot" style="background:' +
+          storeColour(id) +
+          '"></span><span class="store-toggle-name">' +
+          s.name +
+          '</span><span class="store-toggle-state">' +
+          (on ? 'Included' : 'Off') +
+          '</span></button>'
+        );
+      })
+      .join('');
+
+    const addBtn = document.getElementById('btn-add-store');
+    const extras = availableExtraStores();
+    if (addBtn) {
+      addBtn.hidden = extras.length === 0;
+      if (extras.length === 0) closeAddStoreSheet();
+    }
+  }
+
+  function renderAddStoreOptions() {
+    const wrap = document.getElementById('add-store-options');
+    if (!wrap) return;
+    const extras = availableExtraStores();
+    if (!extras.length) {
+      wrap.innerHTML = '<p class="hint">All available stores are already on your list.</p>';
+      return;
+    }
+    wrap.innerHTML = extras
+      .map((id) => {
+        const s = D.STORES[id];
+        return (
+          '<button type="button" class="store-toggle add-option" data-add-store="' +
+          id +
+          '"><span class="dot" style="background:' +
+          storeColour(id) +
+          '"></span><span class="store-toggle-name">' +
+          s.name +
+          '</span><span class="store-toggle-state">Add</span></button>'
+        );
+      })
+      .join('');
+  }
+
+  function openAddStoreSheet() {
+    const sheet = document.getElementById('add-store-sheet');
+    if (!sheet) return;
+    renderAddStoreOptions();
+    sheet.hidden = false;
+    document.getElementById('btn-add-store')?.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeAddStoreSheet() {
+    const sheet = document.getElementById('add-store-sheet');
+    if (sheet) sheet.hidden = true;
+    document.getElementById('btn-add-store')?.setAttribute('aria-expanded', 'false');
+  }
+
+  function pinStore(id) {
+    if (!D.STORES[id] || pinnedStores.includes(id)) return;
+    pinnedStores.push(id);
+    selectedStores.add(id);
+    closeAddStoreSheet();
+    renderStorePick();
   }
 
   document.getElementById('store-pick').addEventListener('click', (e) => {
@@ -344,6 +410,20 @@
       selectedStores.delete(id);
     } else selectedStores.add(id);
     renderStorePick();
+  });
+
+  document.getElementById('btn-add-store')?.addEventListener('click', () => {
+    const sheet = document.getElementById('add-store-sheet');
+    if (sheet && !sheet.hidden) closeAddStoreSheet();
+    else openAddStoreSheet();
+  });
+
+  document.getElementById('btn-cancel-add-store')?.addEventListener('click', closeAddStoreSheet);
+
+  document.getElementById('add-store-options')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-add-store]');
+    if (!btn) return;
+    pinStore(btn.getAttribute('data-add-store'));
   });
 
   document.querySelectorAll('input[name="journey-mode"]').forEach((r) => {

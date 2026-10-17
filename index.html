@@ -84,12 +84,19 @@
 
     <!-- STEP 2: Stores -->
     <section class="step panel" id="step-2" data-step="2" hidden aria-labelledby="step2-title">
-      <header class="panel-head">
-        <h2 id="step2-title">Which stores do you want to use?</h2>
-        <p>Pick the supermarkets to include. You can shop at the single cheapest, or split the list across shops for the lowest item prices.</p>
-      </header>
+      <div class="step-hero">
+        <h2 class="brand-hero section-title" id="step2-title">STORE</h2>
+      </div>
 
       <div class="store-pick" id="store-pick" role="group" aria-label="Stores to include"></div>
+      <button type="button" class="btn add-store" id="btn-add-store" aria-expanded="false" aria-controls="add-store-sheet">
+        <span aria-hidden="true">+</span> Add a store
+      </button>
+      <div class="add-store-sheet" id="add-store-sheet" hidden>
+        <p class="field-label">Choose a store to add</p>
+        <div class="add-store-options" id="add-store-options"></div>
+        <button type="button" class="btn ghost" id="btn-cancel-add-store">Cancel</button>
+      </div>
 
       <div class="control-block">
         <span class="field-label">How should we plan your trip?</span>
@@ -98,23 +105,22 @@
             <input type="radio" name="journey-mode" value="single" checked>
             <span>
               <strong>One cheapest shop</strong>
-              <small>Buy everything where the whole basket costs least — simplest trip.</small>
+              <small>Buy everything where the whole basket costs least.</small>
             </span>
           </label>
           <label class="choice">
             <input type="radio" name="journey-mode" value="split">
             <span>
               <strong>Split across stores</strong>
-              <small>Buy each item where it’s cheapest — may mean more than one stop.</small>
+              <small>Buy each item where it’s cheapest.</small>
             </span>
           </label>
         </div>
       </div>
 
       <div class="control-block">
-        <label class="field-label" for="postcode">Rough area (optional)</label>
+        <label class="field-label" for="postcode">Area (optional)</label>
         <input type="text" id="postcode" class="text-input" placeholder="e.g. LS1 or M1" maxlength="8" autocomplete="postal-code">
-        <p class="hint">Used later for turn-by-turn maps. For now we build a simple visit order.</p>
       </div>
 
       <div class="step-actions dual">
